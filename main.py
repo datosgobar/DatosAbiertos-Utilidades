@@ -5,6 +5,7 @@ from fastapi import FastAPI, UploadFile, Query, File
 from fastapi.responses import RedirectResponse
 
 from portal_andino.update import catalog_update
+from portal_andino.info import get_organizations
 
 app = FastAPI(
     title="API DatosAbiertos",
@@ -25,6 +26,17 @@ app = FastAPI(
 @app.get("/")
 def root():
     return RedirectResponse("/docs")
+
+
+@app.get(
+    "/portal/organizations",
+    name="Organizaciones",
+    description="Toma la url de un portal y devuelve su árbol de organizaciones."
+)
+def organizations_portal(
+        url: str = Query(description="URL del portal")
+):
+    return get_organizations(url)
 
 
 @app.post(
