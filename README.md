@@ -20,6 +20,13 @@ pip install -r requirements.txt
 
 ## Ejecución
 
+### Terminal
 ```
 uvicorn main:app --reload
+```
+
+### Docker
+```
+docker build -t apidatos:0.1 .
+docker run -d --name apidatos_app -p 80:80 apidatos:0.1
 ```
