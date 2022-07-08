@@ -1,11 +1,12 @@
 import tempfile
+from typing import Union
 
 import uvicorn
 from fastapi import FastAPI, UploadFile, Query, File
 from fastapi.responses import RedirectResponse
 
 from portal_andino.update import catalog_restore
-from portal_andino.info import get_organizations
+from portal_andino import info
 
 app = FastAPI(
     title="API DatosAbiertos",
@@ -36,7 +37,7 @@ def root():
 def organizations_portal(
         url: str = Query(description="URL del portal")
 ):
-    return get_organizations(url)
+    return info.get_organizations(url)
 
 
 @app.post(
@@ -59,6 +60,25 @@ async def catalog_restore(
         pushed_datasets = catalog_restore(catalog.name, origin_url, destination_url, apikey)
 
     return pushed_datasets
+
+
+@app.post(
+    "/portal/catalog/is_valid",
+    name="Valida Catálogo",
+    description="Analiza la validez de la estructura de un catálogo"
+)
+async def is_valid_catalog(
+        file: Union[UploadFile, None] = File(default=None, description="El catálogo a validar."),
+        url: Union[str, None] = Query(default=None, description="La URL del portal que contiene el catalogo a validar.")
+):
+    if file:
+        with tempfile.NamedTemporaryFile() as catalog:
+            content = await file.read()
+            catalog.write(content)
+            catalog.seek(0)
+            return info.is_valid_catalog(catalog.name)
+    else:
+        return info.is_valid_catalog(url)
 
 
 if __name__ == "__main__":
