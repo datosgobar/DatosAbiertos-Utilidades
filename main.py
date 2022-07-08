@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from portal_andino import router as portal
+from csv_app import router as csv_app
 
 app = FastAPI(
     title="API DatosAbiertos",
@@ -20,6 +21,7 @@ app = FastAPI(
 )
 
 app.include_router(portal.router)
+app.include_router(csv_app.router)
 
 
 @app.get("/", include_in_schema=False)
