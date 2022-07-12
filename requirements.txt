@@ -4,3 +4,4 @@ pydatajson==0.4.67
 python-multipart==0.0.5
 pandas==1.1.5
 typing_extensions==4.1.1
+xlrd==1.1.0
