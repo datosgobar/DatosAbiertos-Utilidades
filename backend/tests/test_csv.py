@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from csv_app.tools import compare_heads, get_info
+from backend.csv_app.tools import compare_heads, get_info
 
 
 class TestCsv(unittest.TestCase):

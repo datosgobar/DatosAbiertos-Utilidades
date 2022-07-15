@@ -2,8 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from portal_andino import router as portal
-from csv_app import router as csv_app
+from backend.portal_andino import router as portal
+from backend.csv_app import router as csv_app
 
 app = FastAPI(
     title="API DatosAbiertos",
