@@ -3,7 +3,7 @@ from typing import Union
 
 from fastapi import APIRouter, Query, UploadFile, File
 
-from portal_andino import info
+from portal_andino import info, update
 
 router = APIRouter(
     prefix="/portal",
@@ -39,7 +39,7 @@ async def catalog_restore(
         content = await file.read()
         catalog.write(content)
         catalog.seek(0)
-        pushed_datasets = catalog_restore(catalog.name, origin_url, destination_url, apikey)
+        pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
 
     return pushed_datasets
 
