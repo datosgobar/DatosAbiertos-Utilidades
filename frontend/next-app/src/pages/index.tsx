@@ -1,13 +1,18 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import Navbar from "../components/NavBar";
+import React from "react";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+  <div className={styles.container}>
+    <Navbar/>
       <Head>
+
         <title>Create Next app</title>
         <link rel="icon" href="/favicon.ico" />
+
       </Head>
 
       <main className={styles.main}>
