@@ -4,8 +4,8 @@ services:
   next-app:
     container_name: next-app
     build:
-      context: ./next-app
-      dockerfile: prod.Dockerfile
+      context: frontend/next-app
+      dockerfile: frontend/next-app/prod.Dockerfile
       args:
         ENV_VARIABLE: ${ENV_VARIABLE}
         NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
