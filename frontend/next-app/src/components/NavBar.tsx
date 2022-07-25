@@ -14,7 +14,6 @@ const Navbar = () => {
     const [navActive, setNavActive] = useState(null);
     const [activeIdx, setActiveIdx] = useState(-1);
     return (
-        <header className="sticky z-30 top-0 bg-white ">
             <nav
                 className={`nav ${
                     navActive ? "active" : ""
@@ -50,7 +49,6 @@ const Navbar = () => {
                     ))}
                 </div>
             </nav>
-        </header>
     );
 };
 
