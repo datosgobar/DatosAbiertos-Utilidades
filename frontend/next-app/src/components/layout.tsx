@@ -11,15 +11,16 @@ type Props = {
 
 const Layout = ({ children, title = 'This is the default title' }: Props) =>{
     return (
-        <div className={styles.container}>
+        <div>
         <Head>
             <title>{title}</title>
             <link rel="icon" href="/favicon.ico" />
             <meta charSet="utf-8" />
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-
         </Head>
-        <Navbar></Navbar>
+            <div>
+        <Navbar/>
+            </div>
         <main className={styles.main}>
             {children}
         </main>

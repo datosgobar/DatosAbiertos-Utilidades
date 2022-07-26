@@ -2,40 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 import  NavItem  from "./NavItem";
-import {inspect} from "util";
-import   "../styles/navbar.module.css";
-
+import navbarStyles from "../styles/navbar.module.css"
 const MENU_LIST = [
-    { text: "Services", href: "/services" },
-    { text: "Privacy Policy", href: "/privacypolicy" },
-    { text: "Terms & Conditions", href: "/terms-and-conditions" },
+    { text: "INICIO", href: "/home" },
+    { text: "IDENTIDAD", href: "/identidad" },
+    { text: "COMPONENTES", href: "/componentes" },
+    { text: "PLANTILLAS", href: "/plantillas" },
 ];
 const Navbar = () => {
     const [navActive, setNavActive] = useState(null);
     const [activeIdx, setActiveIdx] = useState(-1);
     return (
+        <header className={navbarStyles.header} >
             <nav
-                className={`nav ${
-                    navActive ? "active" : ""
-                }
-        `}
+                className={`nav active`}
             >
-                <Link href={"/"}>
-                    <a onClick={() => setActiveIdx(-1)}>
-                        <h1 className="text-xl font-semibold">CodeWithMarish</h1>
-                    </a>
-                </Link>
-                <div
-                    className={`menu__icon ${
-                        navActive ? "active" : "inactive"
-                    }`}
-                    onClick={() => setNavActive(!navActive)}
-                >
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                <div onClick={() => setNavActive(!navActive)}>
                 </div>
-                <div className={`nav__menu ${navActive ? "active" : ""}`}>
+                <div >
                     {MENU_LIST.map((menu, idx) => (
                         <div
                             onClick={() => {
@@ -49,6 +33,7 @@ const Navbar = () => {
                     ))}
                 </div>
             </nav>
+        </header>
     );
 };
 
