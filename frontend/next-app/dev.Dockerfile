@@ -11,7 +11,7 @@ RUN \
 
 COPY src ./src
 COPY public ./public
-COPY next.config.js .
+#COPY next.config.js .
 COPY tsconfig.json .
 
 CMD yarn dev

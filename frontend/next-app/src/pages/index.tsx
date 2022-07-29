@@ -9,7 +9,7 @@ import NestedLayout from '../components/nested-layout'
 import type { NextPageWithLayout } from './_app'
 
 const Page: NextPageWithLayout = () => {
-  return <div>
+  return <div className="container">
           <h1 className={styles.title}>
             Welcome to <a href="https://nextjs.org">Next.js</a> on Docker Compose!
           </h1>

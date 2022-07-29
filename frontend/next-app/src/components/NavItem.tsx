@@ -1,14 +1,14 @@
 import Link from "next/link";
-import '../styles/Home.module.css'
+import '../styles/navitem.module.css'
 const NavItem = ({ text, href, active }) => {
     return (
-        <Link href={href}>
-            <a
-                className={`nav__link active`}
-            >
-                {text}
-            </a>
-        </Link>
+        <li data-seccion={text}>
+        <a href={href}>
+
+                        {text}
+
+         </a>
+        </li>
     );
 };
 

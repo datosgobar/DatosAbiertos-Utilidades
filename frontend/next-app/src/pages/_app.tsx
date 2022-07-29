@@ -1,6 +1,8 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 
+import "ar-poncho/dist/css/poncho.min.css"
+import "bootstrap/dist/css/bootstrap.min.css"
 import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import React from "react";
@@ -19,7 +21,7 @@ function UtilidadesApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return getLayout(
       <>
-      <Component {...pageProps} />
+      <Component {...pageProps}  />
       </>)
 }
 export default UtilidadesApp;
