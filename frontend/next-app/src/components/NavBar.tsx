@@ -15,7 +15,7 @@ const Navbar = () => {
     const [activeIdx, setActiveIdx] = useState(-1);
     return (
 
-            <nav className="navbar navbar-top navbar-default">
+            <nav className="navbar navbar-top navbar-default  ">
                 <div className="container">
                     <div className="navbar-header">
                         <a href="/" className="navbar-brand">
@@ -25,20 +25,20 @@ const Navbar = () => {
                     </div>
                     <div className="collapse navbar-collapse">
                         <ul className="nav navbar-nav navbar-right">
-                        {/*<div  >*/}
                             {MENU_LIST.map((menu, idx) => (
-                                // <div
-                                //     onClick={() => {
-                                //         setActiveIdx(idx);
-                                //         setNavActive(false);
-                                //     }}
-                                //     key={menu.href}
-                                // >
-                                    <NavItem {...menu} active={idx === activeIdx} />
+                                <div className="nav navbar-nav navbar-right"
+                                     onClick={() => {
+                                         setActiveIdx(idx);
+                                         setNavActive(false);
+                                     }}
+                                     key={menu.href}
+                                >
+                                    <NavItem
 
-                                // </div>
+                                        {...menu} active={idx === activeIdx} />
+
+                                </div>
                             ))}
-                        {/*</div>*/}
                         </ul>
                     </div>
                 </div>
