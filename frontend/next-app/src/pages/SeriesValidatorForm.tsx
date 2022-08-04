@@ -9,6 +9,9 @@ import NestedLayout from '../components/nested-layout'
 import type { NextPageWithLayout } from './_app'
 import Card from "../components/Card";
 import NavItem from "../components/NavItem";
+import InputTypeSelect from "../components/InputTypeSelect";
+import InputTypeText from "../components/InputTypeText";
+import CustomSubmitButton from "../components/CustomSubmitButton";
 const CARD_LIST = [
     { title:"Documentation" ,text: "Find in-depth information about Next.js features and API", href: "https://nextjs.org/docs" ,active:true},
     { title:"Learn" ,text: "Learn about Next.js in an interactive course with quizzes!", href: "https://nextjs.org/learn" ,active:true},
@@ -17,32 +20,36 @@ const CARD_LIST = [
     { title:"una card extra" ,text: "TOOL1", href: "/tool1" ,active:true},
     { title:"dos cards extras" ,text: "TOOL2", href: "/tool2" ,active:true},
 ];
-const HomePage: NextPageWithLayout = () => {
-  return <div >
-          <h1 className={styles.title}>
-           Bienvenido a PyDataTools !
-          </h1>
+const SeriesValidatorFormPage: NextPageWithLayout = () => {
+    return <div >
+        <h1 className={styles.description}>
+            formulario de validacion de series
+        </h1>
 
-          <div className={styles.grid}>
-              {CARD_LIST.map((card,idx) => (
+        <div >
+            <form>
+                <InputTypeSelect>
 
-                      <Card {...card}/>
+                </InputTypeSelect>
+                <InputTypeText>
 
-              ))}
-          </div>
+                </InputTypeText>
+                <CustomSubmitButton label={"unalabel"}></CustomSubmitButton>
+            </form>
         </div>
+    </div>
 
 }
 
-HomePage.getLayout = function getLayout(page: ReactElement) {
-  return (
-      <Layout>
-        {page}
-      </Layout>
-  )
+SeriesValidatorFormPage.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <Layout>
+            {page}
+        </Layout>
+    )
 }
 
-export default HomePage;
+export default SeriesValidatorFormPage;
 
 
 
