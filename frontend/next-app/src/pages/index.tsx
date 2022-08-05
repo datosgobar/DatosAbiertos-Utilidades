@@ -14,7 +14,7 @@ const CARD_LIST = [
     { title:"Learn" ,text: "Learn about Next.js in an interactive course with quizzes!", href: "https://nextjs.org/learn" ,active:true},
     { title:"Examples" ,text: "Discover and deploy boilerplate example Next.js projects.", href: "https://github.com/vercel/next.js/tree/master/examples" ,active:true},
     { title:"Deploy" ,text: "Instantly deploy your Next.js site to a public URL with Vercel.", href: "https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app" ,active:true},
-    { title:"una card extra" ,text: "TOOL1", href: "/tool1" ,active:true},
+    { title:"Series de tiempo" ,text: "TOOL1", href: "/SeriesValidatorForm" ,active:true},
     { title:"dos cards extras" ,text: "TOOL2", href: "/tool2" ,active:true},
 ];
 const HomePage: NextPageWithLayout = () => {
@@ -26,7 +26,7 @@ const HomePage: NextPageWithLayout = () => {
           <div className={styles.grid}>
               {CARD_LIST.map((card,idx) => (
 
-                      <Card {...card}/>
+                      <Card {...card} key={idx} />
 
               ))}
           </div>

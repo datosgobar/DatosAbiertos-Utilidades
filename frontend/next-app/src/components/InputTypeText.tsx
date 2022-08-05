@@ -1,7 +1,10 @@
-import Link from "next/link";
-import styles from "../styles/card.module.css";
 import React from "react";
-const InputTypeText =  (label:string , placeholder='',required:boolean) => {
+type Props = {
+    label: string
+    placeholder: string
+    required:boolean
+}
+const InputTypeText =  ({label , placeholder='',required}:Props) => {
     return (
         <div className={"form-group item-form"}>
             {/*id y name ==> label sin spaces*/}

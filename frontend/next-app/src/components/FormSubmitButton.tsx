@@ -1,5 +1,8 @@
 import React from "react";
-const CustomSubmitButton =  (label:string) => {
+type Props = {
+    label: string
+}
+const CustomSubmitButton =  ({label}:Props) => {
     return (
         <div className={"form-group item-form"}>
             {/*id y name ==> label sin spaces*/}
