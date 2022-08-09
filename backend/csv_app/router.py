@@ -47,7 +47,7 @@ async def csv_info(
     description="Compara los encabezados de un csv contra los valores de un catálogo en la columna 'field_title' "
                 "de la hoja 'field' para un 'distribution_identifier' dado.",
 )
-async def csv_info(
+async def csv_catalog_heads(
         catalog: UploadFile = File(description="El catálogo con los campos a comparar."),
         dataset_id: str = Query(description="El distribution_identifier en el catálogo."),
         csv: UploadFile = File(description="El archivo csv que contiene los encabezados a comparar.")
