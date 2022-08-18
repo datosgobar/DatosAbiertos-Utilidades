@@ -3,7 +3,7 @@ from typing import Union
 
 from fastapi import APIRouter, Query, UploadFile, File
 
-from backend.portal_andino import update, info
+from . import update, info
 
 router = APIRouter(
     prefix="/portal",

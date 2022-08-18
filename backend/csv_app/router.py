@@ -4,7 +4,7 @@ from enum import Enum
 
 from fastapi import APIRouter, UploadFile, File, Query
 
-from backend.csv_app.tools import get_info, compare_heads
+from .tools import get_info, compare_heads
 
 router = APIRouter(
     prefix="/csv",
