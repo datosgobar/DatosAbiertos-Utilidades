@@ -19,7 +19,7 @@ const Navbar = () => {
                 <div className="container">
                     <div className="navbar-header">
                         <a href="/" className="navbar-brand">
-                            <img  src="../../node_modules/ar-poncho/img/poncho.gif" height="50"></img>
+                            <img  src="../../../node_modules/ar-poncho/img/poncho.gif" height="50"></img>
                             <h1>PyDataTools</h1>
                         </a>
                     </div>

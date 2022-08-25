@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
   height: 100%;
-  padding: 0 0.5rem;
+  /*padding: 0 0.5rem;*/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,7 +14,7 @@
   display: flex;
   height: 100%;
   flex-direction: column;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: center;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .footer img {
-  margin-left: 0.5rem;
+  /*margin-left: 0.5rem;*/
 }
 
 .footer a {
@@ -50,13 +50,13 @@
 }
 
 .title {
-  margin: 0;
+  /*margin: 0;*/
   line-height: 1.15;
   font-size: 4rem;
 }
 
 .subtitle {
-  margin: 0;
+  /*margin: 0;*/
   line-height: 1.15;
   font-size: 2rem;
 }

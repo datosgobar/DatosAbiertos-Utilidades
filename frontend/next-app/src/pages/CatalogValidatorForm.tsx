@@ -10,24 +10,25 @@ import InputTypeSelect from "../components/InputTypeSelect";
 import InputTypeText from "../components/InputTypeText";
 import CustomSubmitButton from "../components/FormSubmitButton";
 import Layout from "../components/layout";
+import InputTypeFile from "../components/InputTypeFile";
 const OPTIONS = [
     { name:"JSON" ,value: "JSON"},
     { name:"XLSX" ,value: "XLSX"},
 
 ];
-const SeriesValidatorForm: NextPageWithLayout = () => {
+const CatalogValidatorForm: NextPageWithLayout = () => {
     return   <>
 
-                <InputTypeText placeholder={""} label={"URL del catálogo"} required={true}/>
-                <InputTypeSelect label={"Formato"} placeholder={""} required={true} options_list={OPTIONS}/>
+        <InputTypeText placeholder={""} label={"URL del portal que contiene el catálogoa validar"} required={true}/>
+        <InputTypeFile label={"Catálogo a validar"} placeholder={""} required={true} options_list={OPTIONS}/>
 
 
-                 <CustomSubmitButton label={"VALIDAR"} />
-            </>
+        <CustomSubmitButton label={"VALIDAR"} />
+    </>
 
 }
 
-SeriesValidatorForm.getLayout = function getLayout(page: ReactElement) {
+CatalogValidatorForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
             <BaseFormLayout title={"Validación de distribuciones de series de tiempo"}>
@@ -37,7 +38,7 @@ SeriesValidatorForm.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default SeriesValidatorForm;
+export default CatalogValidatorForm;
 
 
 

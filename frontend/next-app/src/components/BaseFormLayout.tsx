@@ -8,11 +8,12 @@ type Props = {
 }
 
 const BaseFormLayout = ({children,title='Default Title'}:Props) => {
-    return <div >
-        <h1 className={styles.description}>
-            formulario de validacion de series
-        </h1>
-
+    return <div className = "container">
+        <div className="index-header">
+            <h3 className="text-primary text-center">
+                {title}
+            </h3>
+        </div>
         <div >
             <form>
                 {children}

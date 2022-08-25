@@ -7,8 +7,9 @@ const CustomSubmitButton =  ({label}:Props) => {
         <div className={"form-group item-form"}>
             {/*id y name ==> label sin spaces*/}
             <input type="submit"
-                   id={label.replace(/\s/g, '')} name={label.replace(/\s/g, '')}
+                   id={label.replace(/\s/g, '')} value={label.replace(/\s/g, '')}
                    className={"btn btn-primary"}
+
             />
         </div>
     );

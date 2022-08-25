@@ -7,18 +7,12 @@ import Footer from "./Footer";
 
 type Props = {
     children?: ReactNode
-    title?: string
+    // title?: string
 }
 
-const Layout = ({ children, title = 'This is the default title' }: Props) =>{
+const Layout = ({ children }: Props) =>{
     return (
         <>
-        <Head>
-            <title>{title}</title>
-            <link rel="icon" href="/favicon.ico" />
-            <meta charSet="utf-8" />
-            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        </Head>
         <Navbar/>
 
         <main className={styles.main}>
