@@ -61,3 +61,14 @@ async def is_valid_catalog(
             return info.is_valid_catalog(catalog.name)
     else:
         return info.is_valid_catalog(url)
+
+
+@router.get(
+    "/datasets",
+    name="Datasets",
+    description="Toma la url de un portal y devuelve los datasets."
+)
+def organizations_portal(
+        url: str = Query(description="Datasets del portal")
+):
+    return info.get_datasets(url)
