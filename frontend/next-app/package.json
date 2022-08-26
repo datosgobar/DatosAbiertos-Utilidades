@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "ar-poncho": "^2.0.237",
+    "bootstrap": "^3.4.1",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0"

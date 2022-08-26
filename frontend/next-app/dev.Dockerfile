@@ -11,7 +11,8 @@ RUN \
 
 COPY src ./src
 COPY public ./public
-COPY next.config.js .
+COPY node_modules/ar-poncho ./node_modules/ar-poncho
+#COPY next.config.js .
 COPY tsconfig.json .
 
 CMD yarn dev
