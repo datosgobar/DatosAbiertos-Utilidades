@@ -17,6 +17,16 @@ services:
       - 3000:3000
     networks:
       - datosgobar_utilidades_network
+  backend:
+    container_name: fastAPI
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - datosgobar_utilidades_network
 
   # Add more containers below (nginx, postgres, etc.)
 
