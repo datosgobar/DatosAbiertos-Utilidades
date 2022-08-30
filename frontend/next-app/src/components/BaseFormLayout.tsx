@@ -4,7 +4,8 @@ import React, {ReactNode} from "react";
 
 type Props = {
     children?: ReactNode
-    title?: string
+    title?: string,
+    onSubmit: Function,
 }
 
 const BaseFormLayout = ({children,title='Default Title'}:Props) => {
