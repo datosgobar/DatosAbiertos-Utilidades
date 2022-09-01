@@ -15,7 +15,7 @@ import InputTypeFile from "../components/InputTypeFile";
 const CatalogValidatorForm: NextPageWithLayout = () => {
     return   <>
 
-        <InputTypeText placeholder={"Ingresar URL"} label={"URL del portal que contiene el catálogo a validar"} required={true}/>
+        <InputTypeText placeholder={"Ingresar URL"} label={"URL del portal que contiene el catálogo a validar"} required={true} id={"url"}/>
         <InputTypeFile label={"Catálogo a validar"} placeholder={"Subir archivo correspondiente al catálogo"} required={true} />
 
 
@@ -27,7 +27,7 @@ const CatalogValidatorForm: NextPageWithLayout = () => {
 CatalogValidatorForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-            <BaseFormLayout title={"Restauración de catálogos"}>
+            <BaseFormLayout title={"Restauración de catálogos"} onSubmit={undefined}>
                 {page}
             </BaseFormLayout>
         </Layout>

@@ -19,10 +19,10 @@ const OPTIONS = [
 const CatalogRestoreForm: NextPageWithLayout = () => {
     return   <>
 
-        <InputTypeFile label={"El catálogo de origen que se restaura"} options_list={[{name:"asd",value:"asd"}]} placeholder={"asd"} required={true}></InputTypeFile>
-        <InputTypeText placeholder={""} label={"URL del portal  CKAN de  origen"} required={true}/>
-        <InputTypeText placeholder={""} label={"URL del portal  CKAN de  destino"} required={true}/>
-        <InputTypeText placeholder={""} label={"APIkey de un usuario con permisos que le permitan  crear o editar  un  dataset"} required={true}/>
+        <InputTypeFile label={"El catálogo de origen que se restaura"} placeholder={"asd"} required={true}></InputTypeFile>
+        <InputTypeText placeholder={""} label={"URL del portal  CKAN de  origen"} required={true} id={"url-origen"}/>
+        <InputTypeText placeholder={""} label={"URL del portal  CKAN de  destino"} required={true} id={"url-destino"}/>
+        <InputTypeText placeholder={""} label={"APIkey de un usuario con permisos que le permitan  crear o editar  un  dataset"} required={true} id={"apikey"}/>
 
 
         <CustomSubmitButton label={"VALIDAR"} />
@@ -33,7 +33,7 @@ const CatalogRestoreForm: NextPageWithLayout = () => {
 CatalogRestoreForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"}>
+            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"} onSubmit={undefined}>
                 {page}
             </BaseFormLayout>
         </Layout>

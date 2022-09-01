@@ -1,6 +1,6 @@
 
 import styles from '../styles/Home.module.css'
-import React from "react";
+import React, {FormEventHandler, ReactNode} from "react";
 import type { ReactElement } from 'react'
 
 import type { NextPageWithLayout } from '../pages/_app'
@@ -10,8 +10,12 @@ import InputTypeSelect from "../components/InputTypeSelect";
 import InputTypeText from "../components/InputTypeText";
 import CustomSubmitButton from "../components/FormSubmitButton";
 import Layout from "../components/layout";
+import {GetStaticProps} from "next";
 
-const OrganizationStructureForm: NextPageWithLayout = () => {
+type Props = {
+    url:string
+}
+const OrganizationStructureForm: NextPageWithLayout = ({url}:Props) => {
 
 
     return   <>
@@ -23,18 +27,24 @@ const OrganizationStructureForm: NextPageWithLayout = () => {
     </>
 
 }
-const handleSubmit = async (event)=>{
-    console.log('ya hice request y este es elñ resuilt');
 
+const handleSubmit:FormEventHandler = async (event)=>{
+    console.log('ya hice request y este es elñ resuilt');
+    let url:HTMLInputElement = document.getElementById("url_portal") as HTMLInputElement;
     event.preventDefault();
     const data = {
-        url: event.target.url_portal
+        url:  url.value
     }
     const JSONdata = JSON.stringify(data);
-    let url = new URL('http://fastAPI/portal/organizations');
-    url.search = new URLSearchParams(data).toString();
-
-    const response= await fetch(url);
+    // let ApiUrl = new URL('/portal/organizations');
+    let queryString = new URLSearchParams(data).toString();
+    const response= await fetch('/portal/organizations?'+queryString, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        );
     result = await response.json();
     console.log('ya hice request y este es elñ resuilt');
     console.log(result);
