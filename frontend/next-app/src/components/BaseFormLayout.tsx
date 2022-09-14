@@ -5,10 +5,9 @@ import React, {FormEventHandler, ReactNode} from "react";
 type Props = {
     children?: ReactNode
     title?: string,
-    onSubmit: FormEventHandler,
 }
 
-const BaseFormLayout = ({children,title='Default Title',onSubmit}:Props) => {
+const BaseFormLayout = ({children,title='Default Title'}:Props) => {
     return <div className = "container">
         <div className="index-header">
             <h3 className="text-primary text-center">
@@ -16,9 +15,7 @@ const BaseFormLayout = ({children,title='Default Title',onSubmit}:Props) => {
             </h3>
         </div>
         <div >
-            <form onSubmit={onSubmit}>
-                {children}
-            </form>
+            {children}
         </div>
     </div>
 

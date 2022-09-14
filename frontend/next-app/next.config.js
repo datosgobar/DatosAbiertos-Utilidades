@@ -4,7 +4,7 @@ module.exports = {
         return [
             {
                 source: "/portal/:path*",
-                destination: "http://localhost:8080/portal/:path*",
+                destination: "http://fastAPI:80/portal/:path*",
             },
         ];
     }
