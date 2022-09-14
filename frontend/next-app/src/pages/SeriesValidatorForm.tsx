@@ -18,7 +18,7 @@ const OPTIONS = [
 const SeriesValidatorForm: NextPageWithLayout = () => {
     return   <>
 
-                <InputTypeText placeholder={""} label={"URL del catálogo"} required={true}/>
+                <InputTypeText placeholder={""} label={"URL del catálogo"} required={true} id={"url"}/>
                 <InputTypeSelect label={"Formato"} placeholder={""} required={true} options_list={OPTIONS}/>
 
 
@@ -30,7 +30,7 @@ const SeriesValidatorForm: NextPageWithLayout = () => {
 SeriesValidatorForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"}>
+            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"} onSubmit={undefined}>
                 {page}
             </BaseFormLayout>
         </Layout>
