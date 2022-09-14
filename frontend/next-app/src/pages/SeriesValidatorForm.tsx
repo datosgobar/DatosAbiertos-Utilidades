@@ -30,7 +30,7 @@ const SeriesValidatorForm: NextPageWithLayout = () => {
 SeriesValidatorForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"} onSubmit={undefined}>
+            <BaseFormLayout title={"Validación de distribuciones de series de tiempo"} >
                 {page}
             </BaseFormLayout>
         </Layout>

@@ -1,7 +1,11 @@
+@use '../utils/mixins.module' as *;
+@use '../utils/colors' as *;
+@use  '../utils/bourbon/css3/transform' as *;
+
 .organization-container {
   display: table-row;
   height: 100%;
-  @include base-container();
+  @include base-container;
   .organization {
     height: 100%;
     @include base-content();

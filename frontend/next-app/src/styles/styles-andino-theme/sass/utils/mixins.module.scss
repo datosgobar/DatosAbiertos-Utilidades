@@ -1,3 +1,6 @@
+@use '../utils/media_queries.module' as *;
+@use '../utils/colors' as *;
+
 @mixin box-shadow($shadow) {
   -o-box-shadow: $shadow;
   -moz-box-shadow: $shadow;
@@ -159,7 +162,7 @@ $colors: (
                 ("shp", "#039BE5"),
                 ("otro", "#039BE5")
 );
-$default-color: $blue-300;
+$default-color: blue-300;
 
 @mixin svgFormatColors() {
   svg {
