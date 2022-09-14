@@ -11,7 +11,7 @@ RUN \
 
 COPY src ./src
 COPY public ./public
-COPY node_modules/ar-poncho ./node_modules/ar-poncho
+#COPY node_modules/ar-poncho ./node_modules/ar-poncho
 COPY next.config.js .
 COPY tsconfig.json .
 
