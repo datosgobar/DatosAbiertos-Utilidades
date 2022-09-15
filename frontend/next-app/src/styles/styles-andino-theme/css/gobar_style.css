@@ -1022,7 +1022,7 @@ td, th {
 
 html {
   font-size: 10px;
-  -webkit-tap-highlight-color: transparent; }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -2153,8 +2153,7 @@ table td[class*=col-], table th[class*=col-] {
 
 .table-responsive {
   min-height: .01%;
-  overflow-x: auto;
-}
+  overflow-x: auto; }
 
 @media screen and (max-width: 767px) {
   .table-responsive {
@@ -5325,7 +5324,7 @@ button.close {
   color: #fff;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
   filter: alpha(opacity=50);
   opacity: .5; }
 
@@ -5399,8 +5398,8 @@ button.close {
   margin: 1px;
   text-indent: -999px;
   cursor: pointer;
-  background-color: #000 \9;
-  background-color: transparent;
+  background-color: #000 \9 ;
+  background-color: rgba(0, 0, 0, 0);
   border: 1px solid #fff;
   border-radius: 10px; }
 
@@ -5689,6 +5688,9 @@ div.svg-tooltip {
   padding-right: 20px;
   padding-left: 20px; }
 
+@use '../addons/prefixer' as *;
+@use '../utils/media_queries.module' as *;
+@use '../utils/colors' as *;
 /*!
  * Datepicker for Bootstrap v1.6.1 (https://github.com/eternicode/bootstrap-datepicker)
  *
@@ -6325,7 +6327,7 @@ div.svg-tooltip {
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
   position: relative;
   white-space: nowrap;
-  z-index: 10000; }
+  z-index: 4; }
   @media (min-width: 768px) {
     #header {
       position: fixed;
@@ -6542,6 +6544,7 @@ div.svg-tooltip {
       #footer #footer-spacer .footer-section.links-externos {
         text-align: right; }
         #footer #footer-spacer .footer-section.links-externos .ckan-link {
+          margin: 0;
           color: #767676;
           text-align: right; }
         #footer #footer-spacer .footer-section.links-externos .ckan-name {
@@ -7190,7 +7193,7 @@ div#background-container {
           top: 50%;
           left: 10px;
           margin-top: -17.5px; }
-          .featured-groups .group-container .group .group-text svg circle, .featured-groups .group-container .group .group-text svg path, .featured-groups .group-container .group .group-text img path {
+          .featured-groups .group-container .group .group-text svg path, .featured-groups .group-container .group .group-text img path {
             fill: #0695d6; }
         .featured-groups .group-container .group .group-text .group-table {
           width: 100%;
@@ -7386,23 +7389,16 @@ div#background-container {
     position: relative;
     top: -20px;
     color: #ef4d3d; }
+  #template-config-container #template-config .can-have-feedback-img.username-feedback .feedback-img,
   #recover-password.modal .can-have-feedback-img.username-feedback .feedback-img {
     left: 172px; }
   #template-config-container #template-config .can-have-feedback-img.username-feedback .validation-error,
   #recover-password.modal .can-have-feedback-img.username-feedback .validation-error {
     top: 0; }
   #template-config-container #template-config .can-have-feedback-img.fullname-feedback .feedback-img,
-  #template-config-container #template-config .can-have-feedback-img.username-feedback .feedback-img,
   #recover-password.modal .can-have-feedback-img.fullname-feedback .feedback-img {
     left: auto;
     right: 8px; }
-  #template-config-container #template-config select{
-    margin-bottom: 40px;
-    width: 100%;
-    height: auto; }
-  #template-config-container #template-config div.locale {
-    margin-bottom: 30px;
-  }
 
 #password-reset.modal {
   width: 500px;
@@ -7494,8 +7490,7 @@ div#background-container {
         font-weight: 400;
         padding: 5px 20px 5px 0;
         font-size: 16px;
-        line-height: 1.2;
-        color: #323232;}
+        line-height: 1.2; }
       #login-container #login form input[type="text"], #login-container #login form input[type="password"] {
         width: 100%;
         font-size: 16px;
@@ -7560,7 +7555,8 @@ div#background-container {
       display: table-cell;
       vertical-align: middle; }
       #login-container #login #login-vertical-wrapper .password-reset {
-        float: right; }
+        text-align: center;
+        margin: 50px 0 0 0; }
     #login-container #login #forgot-password-positive-feedback {
       text-align: center;
       margin-bottom: 40px; }
@@ -7576,8 +7572,7 @@ div#background-container {
           margin-right: 10px; }
     #login-container #login form {
       width: 100%;
-      margin: 0 auto;
-      border-radius: 10px;}
+      margin: 0 auto; }
       @media (min-width: 768px) {
         #login-container #login form {
           width: 600px; } }
@@ -7610,14 +7605,14 @@ div#background-container {
         background: #0695d6;
         color: white;
         border: none;
-        border-radius: 0;
-        font-size: 14px;
+        border-radius: 4px;
+        font-size: 16px;
         margin-bottom: 5px;
-        font-weight: 500;
-        padding: 6px 20px;
+        font-weight: 300;
+        padding: 12px;
         display: inline-block; }
-      #login-container #login form button:hover {
-        background-color: #17b2f8; }
+        #login-container #login form button:hover {
+          background-color: #17b2f8; }
 
 #recover-password.modal {
   width: 600px;
@@ -7691,12 +7686,11 @@ div#background-container {
 #template-config-container #template-config #user-config-my-account {
   margin-bottom: 50px; }
   #template-config-container #template-config #user-config-my-account input[name="username"] {
-    width: 100%;
-    max-width: 100%; }
+    width: 200px;
+    max-width: 80%; }
   #template-config-container #template-config #user-config-my-account input[name="email"],
   #template-config-container #template-config #user-config-my-account input[name="email-confirmation"],
-  #template-config-container #template-config #user-config-my-account input[name="password"],
-  #template-config-container #template-config #user-config-my-account input[name="apikey"]  {
+  #template-config-container #template-config #user-config-my-account input[name="password"] {
     width: 370px;
     max-width: 80%; }
   #template-config-container #template-config #user-config-my-account .disabled-input svg {
@@ -7716,16 +7710,15 @@ div#background-container {
   #template-config-container #template-config #user-config-create-users .role-description {
     font-style: italic; }
   #template-config-container #template-config #user-config-create-users input[name="username"] {
-    width: 100%;
+    width: 200px;
+    max-width: 80%;
     margin-bottom: 10px; }
-  #template-config-container #template-config #user-config-create-users .username-restriction,
-  #template-config-container #template-config #user-config-create-users .password-restriction{
+  #template-config-container #template-config #user-config-create-users .username-restriction {
     margin-bottom: 30px;
     font-style: italic; }
   #template-config-container #template-config #user-config-create-users input[name="email"],
   #template-config-container #template-config #user-config-create-users input[name="email-confirmation"],
-  #template-config-container #template-config #user-config-create-users input[name="password"],
-  #template-config-container #template-config #user-config-create-users input[name="password2"] {
+  #template-config-container #template-config #user-config-create-users input[name="password"] {
     width: 370px;
     max-width: 80%; }
   #template-config-container #template-config #user-config-create-users button.save-new-user {
@@ -7904,6 +7897,9 @@ div#background-container {
         #user-config-history .show-more-container .show-more:hover svg path {
           fill: #767676; }
 
+@use '../utils/mixins.module' as *;
+@use '../utils/colors' as *;
+@use '../utils/bourbon/css3/transform' as *;
 .organization-container {
   display: table-row;
   height: 100%;
@@ -7953,10 +7949,6 @@ div#background-container {
         color: #767676; }
         .organization-container .organization .organization-list .organization-list-title .count-title {
           float: right; }
-        .organization-container .organization .organization-list .organization-list-title > span {
-          font-size: 26px;
-          font-weight: 500;
-        }
       .organization-container .organization .organization-list hr {
         margin: 5px 0;
         border: none;
@@ -7993,10 +7985,8 @@ div#background-container {
             fill: #767676; }
         .organization-container .organization .organization-list .organization-branch .organization-name svg.chevron-right {
           vertical-align: middle;
-          width: 15px;
+          width: 20px;
           height: 20px;
-          margin-bottom: 5px;
-          margin-right: 5px;
           -webkit-transform: scale(2);
           -moz-transform: scale(2);
           -ms-transform: scale(2);
@@ -8010,12 +8000,12 @@ div#background-container {
           position: relative;
           padding-right: 2em; }
       .organization-container .organization .organization-list .organization-branch .organization-count {
-        font-weight: bold;
+        font-weight: 500;
         position: absolute;
         top: 0;
         right: 0;
         padding: 5px;
-        color: #767676; }
+        color: #424242; }
       .organization-container .organization .organization-list .top-organization ~ .organization-branch {
         padding-right: 2em; }
 
@@ -8496,9 +8486,9 @@ div#background-container {
           max-height: 35px; }
           .filters-container .search-filter .group-images .group-image-container svg path {
             fill: #cccccc; }
-            .filters-container .search-filter .group-images .group-image-container.available svg circle, .filters-container .search-filter .group-images .group-image-container.available svg path {
+        .filters-container .search-filter .group-images .group-image-container.available svg path {
           fill: #767676; }
-          .filters-container .search-filter .group-images .group-image-container.available:hover svg circle, .filters-container .search-filter .group-images .group-image-container.available:hover svg path {
+        .filters-container .search-filter .group-images .group-image-container.available:hover svg path {
           fill: #0695d6; }
         .filters-container .search-filter .group-images .group-image-container.active svg path {
           fill: #0695d6; }
@@ -8591,7 +8581,7 @@ div#background-container {
         width: 3.5em;
         font-weight: 500;
         margin: 0 0 5px 5px;
-        background-color: #0695d6;
+        background-color: blue-300;
         overflow: hidden;
         text-overflow: ellipsis; }
         .dataset-list .dataset-item .dataset-container .dataset-border .dataset-groups-and-resources .dataset-resources .label[data-format=html], .dataset-list .dataset-item .dataset-container .dataset-border .dataset-groups-and-resources .dataset-resources .label[data-format*=html] {
@@ -9091,11 +9081,6 @@ div#background-container {
               background: #0695d6; }
       #edit-package-container #edit-package form .control-group, #edit-package-container #new-package form .control-group, #new-package-container #edit-package form .control-group, #new-package-container #new-package form .control-group {
         margin: 0 0 30px 0; }
-
-        #edit-package-container #edit-package form .control-group label.form-error-message, #edit-package-container #new-package form .control-group label.form-error-message, #new-package-container #edit-package form .control-group label.form-error-message, #new-package-container #new-package form .control-group label.form-error-message {
-          margin: 10px 0 0 0;
-          font-size: 16px;
-          color: red; }
         #edit-package-container #edit-package form .control-group label, #edit-package-container #new-package form .control-group label, #new-package-container #edit-package form .control-group label, #new-package-container #new-package form .control-group label {
           font-size: 20px;
           color: #999999;
@@ -9122,8 +9107,6 @@ div#background-container {
         #edit-package-container #edit-package form .control-group select, #edit-package-container #new-package form .control-group select, #new-package-container #edit-package form .control-group select, #new-package-container #new-package form .control-group select {
           width: 24em;
           max-width: 100%; }
-          #edit-package-container #edit-package form .control-group select, #edit-package-container #new-package form .control-group select, #new-package-container #edit-package form .control-group select, #new-package-container #new-package form .resource-select .control-group select {
-            width: 100%; }
         #edit-package-container #edit-package form .control-group .controls, #edit-package-container #new-package form .control-group .controls, #new-package-container #edit-package form .control-group .controls, #new-package-container #new-package form .control-group .controls {
           margin: 0; }
           #edit-package-container #edit-package form .control-group .controls.editor textarea, #edit-package-container #new-package form .control-group .controls.editor textarea, #new-package-container #edit-package form .control-group .controls.editor textarea, #new-package-container #new-package form .control-group .controls.editor textarea {
@@ -9230,12 +9213,9 @@ div#background-container {
   color: white;
   background-color: #767676;
   cursor: pointer; }
-#resource-edit a.btn-remove-url, #group-edit a.btn-remove-url {
+#resource-edit a.btn-remove-url {
   top: 8px;
   right: 8px; }
-  #resource-edit a.btn-remove-url span.icon-remove, #group-edit a.btn-remove-url span.icon-remove {
-    font-size: 26px;
-    color: #999999; }
 #resource-edit .icon-cloud-upload,
 #resource-edit .icon-globe {
   display: none; }
@@ -9250,56 +9230,26 @@ div#background-container {
   #resource-edit #resource-attributes-form .resource-attributes-group {
     padding-top: 30px;
     border-top: solid 1px #cccccc; }
-    #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-header {
-      border-bottom: solid 1px #cccccc;
-      color: black;
-      font-size: 20px;
-      padding: 5px;
-      margin-bottom: 20px; }
     #resource-edit #resource-attributes-form .resource-attributes-group .icon-remove {
       font-size: 20px;
       position: absolute;
       right: 0;
-      top: 10px;
+      top: -20px;
       cursor: pointer;
       color: #999999; }
-    #resource-edit #resource-attributes-form .resource-attributes-group .add-extra-fields {
-      text-align: center;
-      background-color: #e6f5fc;
-      padding: 20px 0;
-      cursor: pointer;
-      color: #0695d6; }
-    #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container {
-      padding: 0 15px 15px 0; }
-      #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container.resource-col-special-data-container {
-        display: none; }
-      #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container.resource-col-advanced-container {
-        display: none; }
-      #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container .resource-attributes-input-disclaimer {
-        font-size: 15px;
-        color: black;}
-      #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container .blue {
-        font-size: 15px;
-        color: #0695d6;}
-      #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-input-container select {
-        height: 40px;
-        margin-bottom: 20px; }
+    #resource-edit #resource-attributes-form .resource-attributes-group .resource-attributes-title-container {
+      padding: 0 15px 0 0; }
     #resource-edit #resource-attributes-form .resource-attributes-group .other-resource-attributes-container {
       padding: 0 0 0 15px; }
+      #resource-edit #resource-attributes-form .resource-attributes-group .other-resource-attributes-container .resource-col-type,
       #resource-edit #resource-attributes-form .resource-attributes-group .other-resource-attributes-container .resource-col-id {
         height: 40px;
         margin-bottom: 20px; }
-      #resource-edit #resource-attributes-form .resource-attributes-group .other-resource-attributes-container .resource-col-units {
+      #resource-edit #resource-attributes-form .resource-attributes-group .other-resource-attributes-container .resource-col-unit {
         margin-bottom: 20px; }
   #resource-edit #resource-attributes-form .control-full + .resource-attributes-group {
     padding-top: 0;
     border-top: none; }
-  #resource-edit #resource-attributes-form #delete-col-modal {
-    text-align: center; }
-  #resource-edit #resource-attributes-form #delete-col-modal h1 {
-    color: #f53a20; }
-  #resource-edit #resource-attributes-form #delete-col-modal .btn-danger {
-    background-color: #f53a20; }
 #resource-edit h2.blue {
   color: #0695d6;
   margin: 0 0 10px 0; }
@@ -9354,6 +9304,7 @@ div#background-container {
         float: right; }
     .resource-container .resource .title {
       padding-left: 0;
+      padding-right: 120px;
       margin-bottom: 15px; }
       .resource-container .resource .title h1 {
         color: #0695d6;
@@ -9457,7 +9408,7 @@ div#background-container {
           padding: 0; }
           .resource-container .resource .resource-additional-info .resource-additional .value span.label {
             font-size: 14px;
-            background-color: #0695d6; }
+            background-color: blue-300; }
             .resource-container .resource .resource-additional-info .resource-additional .value span.label[data-format=html], .resource-container .resource .resource-additional-info .resource-additional .value span.label[data-format*=html] {
               background-color: #8E24AA; }
             .resource-container .resource .resource-additional-info .resource-additional .value span.label[data-format=json], .resource-container .resource .resource-additional-info .resource-additional .value span.label[data-format*=json] {
@@ -9500,7 +9451,7 @@ div#background-container {
     left: 0;
     margin-top: -28.35px; }
     .pkg-container .pkg-file-img svg path {
-      fill: #0695d6; }
+      fill: blue-300; }
     .pkg-container .pkg-file-img[data-format=html] svg path, .pkg-container .pkg-file-img[data-format*=html] svg path {
       fill: #8E24AA; }
     .pkg-container .pkg-file-img[data-format=json] svg path, .pkg-container .pkg-file-img[data-format*=json] svg path {
@@ -9827,23 +9778,13 @@ ul.activity {
   ul.activity li.item {
     padding: 0 0 5px 0;
     border-bottom: solid 1px #eaeced;
-    margin: 0 0 5px 0; }
+    margin: 0 0 5px 0;
+    display: none; }
     ul.activity li.item p {
       margin: 5px; }
+  ul.activity li.load-more {
+    display: none !important; }
 
-div.button-pre{
-  margin-top: 20px;
-  display: inline-block;
-  width: 100%;
-}
-div.about-components {
-  margin-bottom: 60px;
-}
-div.about-components > h2{
-  font-size: 32px !important;}
-div.about-components > pre{
-  overflow: inherit;
-}
 #template-config-container {
   padding-right: 0;
   padding-left: 0;
@@ -9876,40 +9817,23 @@ div.about-components > pre{
     #template-config-container #template-config h1 {
       color: #0695d6;
       font-weight: 400;
-      margin: 50px 0 10px 0;
+      margin: 50px 0 30px 0;
       font-size: 40px; }
       #template-config-container #template-config h1.small-margin {
         margin-bottom: 10px; }
-      #template-config-container #template-config h1.section-deletion{
-        color: red;
-      }
     #template-config-container #template-config h2 {
       font-weight: 400;
       margin: 0 0 10px 0;
       font-size: 20px;
       color: #767676; }
       #template-config-container #template-config h2.blue {
-        margin-top: 20px;
         color: #0695d6; }
     #template-config-container #template-config .with-bottom-margin {
       margin-bottom: 30px; }
-    #template-config-container #template-config label.form-error-message {
-      color: red;
-      font-size: 16px;
-      position: relative;
-      top: -20px; }
-    #template-config-container #template-config label.input-error {
-      color: red;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
     #template-config-container #template-config p, #template-config-container #template-config label {
-      margin: 0 0 30px 0;
+      margin: 0 0 10px 0;
       font-weight: 400;
       font-size: 16px; }
-      #template-config-container #template-config p.default-user-error {
-        color:red;
-        margin: 10px 0; }
       #template-config-container #template-config p:after, #template-config-container #template-config label:after {
         content: none; }
     #template-config-container #template-config p.error {
@@ -9943,8 +9867,6 @@ div.about-components > pre{
           top: -9999px; }
         #template-config-container #template-config .radio-container label.img-radio .radio-description {
           padding: 20px; }
-          #template-config-container #template-config .radio-container label.img-radio .radio-description .about-img-radio {
-            padding: 0;}
           #template-config-container #template-config .radio-container label.img-radio .radio-description h2 {
             color: #767676; }
     #template-config-container #template-config input[type="text"],
@@ -9967,12 +9889,8 @@ div.about-components > pre{
       #template-config-container #template-config input[type="text"]:-ms-input-placeholder,
       #template-config-container #template-config input[type="password"]:-ms-input-placeholder {
         font-style: italic; }
-      #template-config-container #template-config input[type="text"].reduced-margin {
-        margin: 0 0 5px 0;
-      }
     #template-config-container #template-config .checkbox-label {
       font-size: 20px;
-      margin: 30px 0;
       color: #999999; }
     #template-config-container #template-config input[type="checkbox"] {
       margin: 0 5px 0 0;
@@ -10028,7 +9946,7 @@ div.about-components > pre{
       color: #767676;
       width: 100%;
       font-size: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
       padding: 10px;
       height: 100px; }
     #template-config-container #template-config .submit-container {
@@ -10039,7 +9957,6 @@ div.about-components > pre{
         background-color: #0695d6;
         color: white;
         border: none;
-        float: right;
         -o-border-radius: 4px;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
@@ -10084,10 +10001,10 @@ div.about-components > pre{
         #template-config #navbar .links-section.guide-link a:hover i, #template-config #navbar .links-section.guide-link a:hover .blue {
           color: #17b2f8; }
 
-#new-group-container #new-group form .control-group .field-image-upload,
-#edit-group-container #edit-group form .control-group .field-image-upload,
-#new-package-container #new-package form .control-group .field-image-upload,
-#edit-package-container #edit-package form .control-group .field-image-upload {
+#new-group-container #new-group form .control-group #field-image-upload,
+#edit-group-container #edit-group form .control-group #field-image-upload,
+#new-package-container #new-package form .control-group #field-image-upload,
+#edit-package-container #edit-package form .control-group #field-image-upload {
   left: -99999px; }
 #new-group-container #new-group form .control-group .file-upload-label,
 #edit-group-container #edit-group form .control-group .file-upload-label,
@@ -10111,377 +10028,4 @@ div.about-components > pre{
 #edit-package-container #edit-package form .control-group .upload-btn {
   margin: 0; }
 
-
-
-
-  /*CUSTOM STYLES PARA TABLA*/
-
-
-
-.gradient {
-  background-image: linear-gradient(90deg, #00baf0, #0076bc);
-  color: #FFFFFF;
-  }
-
-
-.table-striped > tbody > tr:nth-child(2n+1) > td,
-.table-striped > tbody > tr:nth-child(2n+1) > th {
-   background-color: #ebf9ff;
-}
-
-.table-striped tbody tr:nth-child(even) td {
-  background-color: #ffffff;
-}
-
-
-#metadata-table {
-  color:#666666;
-  font-family: 'Roboto', arial, sans-serif;
-}
-
-#metadata-table th {
-  text-align: center;
-  font-weight: 500;
-  font-size: 12px;
-}
-
-#metadata-table td {
-  text-align: center;
-  font-size: 12px;
-}
-
-.h500 {
-  height: 500px;
-}
-
-.title-h{
-  color: #0695d6 !important;
-  font-size: 32px !important;
-  padding-bottom: 20px !important;
-  border-bottom: 0 !important;
-  font-weight: 500 !important;
-  line-height: 1.1 !important;
-}
 /*# sourceMappingURL=gobar_style.css.map */
-
-.resource-edit-embed-button {
-  margin-bottom: 15px;
-}
-
-/*# sourceMappingURL=gobar_style.css.map */
-
-.select2-container.select2-allowclear .select2-choice .select2-chosen {
-  padding-left: 10px;
-}
-
-.input-prepend {
-  width: 100%;
-}
-
-.input-prepend .bfc {
-  width: auto;
-  overflow: hidden;
-}
-
-.input-prepend .add-on {
-  float: left;
-}
-
-.fa.fa-ellipsis-v.col-options {
-  font-size: 20px;
-  position: absolute;
-  right: 0;
-  top: 10px;
-  cursor: pointer;
-  color: #999999;
-}
-
-.remove-column-menu-option span {
-  color: red;
-}
-
-.sort-col-list li i.icon-ellipsis-vertical {
-  padding-right: 10px;
-  font-size: 20px;
-  color: #999999;
-}
-
-.sort-col-list li {
-  border: 1px solid #999999;
-  border-bottom: none;
-  padding: 10px;
-}
-
-.sort-col-list li:last-child {
-  border-bottom: 1px solid #999999;
-}
-
-ul.sort-col-list {
-  list-style-type: none;
-  margin: 25px 0;
-}
-
-body.dragging, body.dragging * {
-  cursor: move !important;
-}
-
-ul.sort-col-list li.dragged {
-  position: absolute;
-  opacity: 0.5;
-  border-bottom: 1px solid #999999;
-  z-index: 2000;
-}
-
-ul.sort-col-list li.placeholder {
-  position: relative;
-}
-ul.sort-col-list li.placeholder:before {
-  position: absolute;
-}
-
-div#sort-col-modal div.modal-body {
-  overflow-x: hidden;
-  max-height: inherit;
-}
-
-
-.resource-container .resource .resource-actions {
-    padding: 0;
-}
-
-.resource-container .resource .resource-actions > .btn {
-    float: right;
-    margin-top: 20px;
-}
-
-.btn-outline-primary, .btn-outline-primary:hover, .btn-outline-primary:focus {
-     border: 1px solid #0695d6;
-     color: #0695d6;
-     background: white;
-}
-
-select.resource-select{
-  height: auto;
-}
-
-option.distribution-type-option{
-  color: black;
-}
-
-div#form-file-name{
-  width: 100%;
-}
-
-hr.section {
-  margin: 5px 0 30px 0;
-  border: 0;
-  border-top: 1px solid #ccc;
-}
-
-div.basic-about, div.advanced-about{
-  display: none;
-}
-
-div.explanation {
-  margin-bottom: 10px;
-}
-
-button#add-another-section{
-  color: #0695d6;
-  text-align: center;
-  width: 100%;
-  height: 80px;
-  margin-top: 20px;
-  background-color: #e6f5fc;
-  cursor: pointer;
-}
-
-div.section-deletion{
-  text-align: center;
-}
-
-button.section-deletion{
-  background-color: red;
-}
-
-div.section-div{
-  margin-bottom: 40px;
-}
-
-.gobar-static-container button {
-    color: white;
-    background-color: #17b2f8;
-    border: none;
-    padding: 10px 18px;
-    font-size: 18px;
-    -o-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.js .image-upload #icon-image-upload, .field-image-upload {
-  left: -99999px;
-  cursor: pointer;
-  position: absolute;
-  z-index: 1;
-  opacity: 0;
-}
-
-div.attributes-table{
-  display: inline-block;
-}
-
-div.dataset-container div.dataset-content{
-  line-height: 2.75ex;
-  height: 17ex;
-  overflow: hidden;
-}
-
-div.dataset-container div.dataset-notes {
-  word-break: break-word;
-}
-
-div.dataset-container h3.dataset-title{
-  word-break: break-word;
-}
-
-div.link-margin{
-  margin-bottom: 50px;
-}
-
-div.about-components > h2{
-  font-size: 18px;
-}
-
-div.about-components div.icon-item {
-  display: inline-block;
-  text-align: center;
-  font-size: 400%;
-}
-
-div.about-components div.row{
-  margin-top: 20px;
-}
-
-div.about-template-buttons > button {
-  margin-left: 0;
-}
-
-div.about-template-icons {
-  font-family: inherit;
-}
-
-div#form-accessURL > div > div.control-group.control-full {
-  margin-bottom: 5px !important;
-}
-
-div#form-accessURL {
-  margin-bottom: 25px;
-}
-
-label[for="accessURL-upload-url"] {
-  display: none !important;
-}
-
-form#datapusher > table.date-picker.datapusher {
-  width: 20%;
-  margin: 10px 0;
-}
-
-#template-config-container #template-config select.datapusher {
-  width: 40%;
-  margin: 0;
-}
-
-#template-config-container #template-config p.datapusher-text {
-  margin-bottom: 5px;
-}
-
-.login-block {
-  display: block;
-}
-
-.andino-logo {
-  width: 366px;
-  margin-top: 45px;
-}
-
-.login-form {
-  text-align: center;
-  display: inline !important;
-}
-
-.login-custom-text {
-  text-align: center;
-  margin-top: 18px;
-  margin-bottom: 10px;
-  color: #002F50;
-}
-
-.login-access-text {
-  margin-bottom: 20px;
-  color: #323232;
-}
-
-.login-password-box {
-  margin-top: 20px;
-}
-
-.login-remember {
-  width: 110px;
-  float: left;
-}
-
-.login-submit-box {
-  display: flex;
-  justify-content: center;
-  margin-left: 170px !important;
-  margin-top: 40px !important;
-}
-
-#field-login, #field-password {
-  border-radius: 8px;
-}
-
-#login-vertical-wrapper label::after {
-  content: "";
-}
-
-div.organization-select {
-  position: sticky;
-}
-
-div.organization-select > div.ms-drop.bottom {
-  position: relative;
-}
-
-div.reduced-margin-content {
-  margin-bottom: 25px;
-}
-
-label.input-error {
-  color: red;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-div#test-mail > p.validation-success {
-  color: #33B561;
-  padding-top: 20px;
-  top: -20px;
-  white-space: pre-line;
-}
-div#test-mail > p.validation-error {
-  color: #ef4d3d;
-  padding-top: 20px;
-  top: -20px;
-  white-space: pre-line;
-}
-div#test-mail > img.feedback-img {
-  display: none;
-}
-
-form#organization-confirm-delete-form > button:disabled {
-  background-color: grey;
-}

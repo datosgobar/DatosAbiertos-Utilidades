@@ -10,7 +10,7 @@ import InputTypeSelect from "../components/InputTypeSelect";
 import InputTypeText from "../components/InputTypeText";
 import CustomSubmitButton from "../components/FormSubmitButton";
 import Layout from "../components/layout";
-import  "../styles/styles-andino-theme/sass/organization/index.module.scss" ;
+// import  "../styles/styles-andino-theme/sass/organization/index.scss" ;
 
 
 const OrganizationStructureForm: NextPageWithLayout = () => {
@@ -44,38 +44,40 @@ const OrganizationStructureForm: NextPageWithLayout = () => {
                 <InputTypeText id={"url_portal"} placeholder={""} label={"URL del portal"} required={true}/>
 
                 <CustomSubmitButton label={"CONSULTAR"} />
-                <div className={"organization"}>
-                    <div className={"organization-list"}>
-                        <div className={"organization-list-title"}>
-                            <span>Organizacion</span>
-                            <span className={"count-title"}>Datasets totales</span>
-                        </div>
-                        <div className={"organization-branch"}>
-                           <div className={"organization-name top-organization"}>
-                               <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24"
-                                    xmlns="http://www.w3.org/2000/svg" className="chevron-right">
-                                   <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                               </svg>
-                               <a href="/dataset?organization=jgm">Jefatura de Gabinete de Ministros (22)</a>
-                           </div>
-                            <span className={"organization-count"}>84</span>
-                            <div className={"organization-branch"}>
-                                <div className={"organization-name"}>
-                                    <a href="/dataset?organization=aaip">Agencia de Acceso a la Información Pública (2)</a>
-                                </div>
+                <div className={"organization-container"}>
+                    <div className={"organization"}>
+                        <div className={"organization-list"}>
+                            <div className={"organization-list-title"}>
+                                <span>Organizacion</span>
+                                <span className={"count-title"}>Datasets totales</span>
                             </div>
                             <div className={"organization-branch"}>
-                                <div className={"organization-name"}>
-                                    <a href="/dataset?organization=aaip">Empresa Argentina de Soluciones Satelitales (8)</a>
+                               <div className={"organization-name top-organization"}>
+                                   <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24"
+                                        xmlns="http://www.w3.org/2000/svg" className="chevron-right">
+                                       <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                                   </svg>
+                                   <a href="/dataset?organization=jgm">Jefatura de Gabinete de Ministros (22)</a>
+                               </div>
+                                <span className={"organization-count"}>84</span>
+                                <div className={"organization-branch"}>
+                                    <div className={"organization-name"}>
+                                        <a href="/dataset?organization=aaip">Agencia de Acceso a la Información Pública (2)</a>
+                                    </div>
+                                </div>
+                                <div className={"organization-branch"}>
+                                    <div className={"organization-name"}>
+                                        <a href="/dataset?organization=aaip">Empresa Argentina de Soluciones Satelitales (8)</a>
+                                    </div>
+                                </div>
+                                <div className={"organization-branch"}>
+                                    <div className={"organization-name"}>
+                                        <a href="/dataset?organization=aaip">Ente Nacional de Comunicaciones (52)</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div className={"organization-branch"}>
-                                <div className={"organization-name"}>
-                                    <a href="/dataset?organization=aaip">Ente Nacional de Comunicaciones (52)</a>
-                                </div>
-                            </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </form>
