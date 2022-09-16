@@ -5,6 +5,8 @@ from fastapi.responses import RedirectResponse
 from portal_andino import router as portal
 from csv_app import router as csv_app
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(
     title="API DatosAbiertos",
     description="""
@@ -18,6 +20,19 @@ app = FastAPI(
     * **Verificar datasets** (_not implemented_).
     * ** ...
     """
+)
+
+# Permite el acceso desde cualquier dominio.
+# TODO: Revisar tema de credenciales
+# https://fastapi.tiangolo.com/es/tutorial/cors/?h=cors#wildcards
+origins = ['*']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(portal.router)
