@@ -1,4 +1,4 @@
-FROM node:18-alpine
+git sFROM node:18-alpine
 
 WORKDIR /app
 

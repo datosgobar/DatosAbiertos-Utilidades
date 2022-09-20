@@ -1,20 +1,25 @@
-
-import styles from '../styles/Home.module.css'
 import React, {FormEventHandler, ReactNode, useState} from "react";
 import type { ReactElement } from 'react'
 
 import type { NextPageWithLayout } from '../pages/_app'
 
 import BaseFormLayout from "../components/BaseFormLayout";
-import InputTypeSelect from "../components/InputTypeSelect";
 import InputTypeText from "../components/InputTypeText";
 import CustomSubmitButton from "../components/FormSubmitButton";
 import Layout from "../components/layout";
-import organizations from "../styles/organizations.module.scss";
+import Card from "../components/Card";
+import {Organization} from "../models/organzationModels";
+import OrganizationTreeResult from "../components/OrganizationTreeResult";
+// import  "../styles/styles-andino-theme/sass/organization/index.scss" ;
 
+
+interface ResultadoConsulta {
+    organizations: Organization[],
+    urlPortal:string
+}
 
 const OrganizationStructureForm: NextPageWithLayout = () => {
-    const [resultadoConsulta,setResultadoConsulta] = useState("resultado default");
+    const [resultadoConsulta ,setResultadoConsulta]:[ResultadoConsulta,Function ]= useState({organizations:undefined,urlPortal:""});
     const handleSubmit:FormEventHandler = async (event)=>{
         console.log('ya hice request y este es elñ resuilt');
         let url:HTMLInputElement = document.getElementById("url_portal") as HTMLInputElement;
@@ -32,10 +37,14 @@ const OrganizationStructureForm: NextPageWithLayout = () => {
                 }
             }
         );
-        let result = await response.json();
-        console.log('ya hice request y este es elñ resuilt');
-        console.log(result.toString());
-        setResultadoConsulta(result.toString());
+        try {
+            let result = await response.json();
+
+            setResultadoConsulta({organizations:JSON.parse(JSON.stringify(result)) as unknown as Organization[],urlPortal:data.url});
+        }catch (e){
+            setResultadoConsulta({organizations:[],urlPortal:data.url})
+        }
+
     }
 
     return <>
@@ -43,7 +52,8 @@ const OrganizationStructureForm: NextPageWithLayout = () => {
                 <InputTypeText id={"url_portal"} placeholder={""} label={"URL del portal"} required={true}/>
 
                 <CustomSubmitButton label={"CONSULTAR"} />
-                <div >{resultadoConsulta}</div>
+                <OrganizationTreeResult organizationList={resultadoConsulta.organizations} urlPortal={resultadoConsulta.urlPortal}/>
+
             </form>
         </>
 

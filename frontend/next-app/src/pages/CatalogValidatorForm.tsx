@@ -27,7 +27,7 @@ const CatalogValidatorForm: NextPageWithLayout = () => {
 CatalogValidatorForm.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-            <BaseFormLayout title={"Restauración de catálogos"} onSubmit={undefined}>
+            <BaseFormLayout title={"Restauración de catálogos"}>
                 {page}
             </BaseFormLayout>
         </Layout>
