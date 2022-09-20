@@ -1,5 +1,3 @@
-import Link from "next/link";
-import styles from "../styles/card.module.css";
 import React, {ReactNode} from "react";
 import NavItem from "./NavItem";
 type Props = {
