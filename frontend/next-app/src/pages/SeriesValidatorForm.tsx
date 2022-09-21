@@ -48,7 +48,7 @@ const SeriesValidatorForm: NextPageWithLayout = () => {
             <form onSubmit={handleSubmit}>
 
                 <InputTypeText placeholder={""} label={"URL del catálogo"} required={true} id={"url"}/>
-                <InputTypeSelect label={"Formato"} placeholder={""} required={true} options_list={OPTIONS}/>
+                <InputTypeSelect label={"Formato"} placeholder={""} required={true} options_list={OPTIONS} id={"format"} onSelect={undefined}/>
 
 
                  <CustomSubmitButton label={"VALIDAR"} />

@@ -1,28 +1,28 @@
-import Link from "next/link";
-import styles from "../styles/card.module.css";
-import React, {ReactNode} from "react";
-import NavItem from "./NavItem";
+import React, {FormEventHandler, ReactNode} from "react";
 type Props = {
     label: string
     placeholder: string
     required:boolean
     options_list: {name:string,value:any}[],
+    onSelect: FormEventHandler,
+    id:string
 }
-const InputTypeSelect = ({label, placeholder='',required,options_list }:Props ) => {
+const InputTypeSelect = ({label, placeholder='',required,options_list , onSelect=undefined,id}:Props ) => {
     return (
         <div className={"form-group item-form"} >
             {/*id y name ==> label sin spaces*/}
             <label className={"form-label"} htmlFor={label.replace(/\s/g, '')}>{label}</label>
             <select
-                id={label.replace(/\s/g, '')} name={label.replace(/\s/g, '')}
+                id={id}
                 required={required}
+                defaultValue={""}
                 placeholder={placeholder}
                 className={"format form-control"}
+                onChange={onSelect}
             >
                 {options_list.map((option,key = options_list.indexOf(option)) => (
-                    <option>
-                        name={option.name}
-                        value={option.value}
+                    <option value={option.value}>
+                        {option.name}
                     </option>
                 ))}
             </select>
