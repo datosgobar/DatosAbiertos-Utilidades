@@ -10,25 +10,22 @@ import Layout from "../components/layout";
 import Card from "../components/Card";
 import {Organization} from "../models/organzationModels";
 import OrganizationTreeResult from "../components/OrganizationTreeResult";
+import {ResultadoConsulta} from "../models/ResultadoConsulta";
 // import  "../styles/styles-andino-theme/sass/organization/index.scss" ;
 
 
-interface ResultadoConsulta {
+interface ResultadoConsultaOrganizations extends ResultadoConsulta{
     organizations: Organization[],
-    urlPortal:string
 }
 
 const OrganizationStructureForm: NextPageWithLayout = () => {
-    const [resultadoConsulta ,setResultadoConsulta]:[ResultadoConsulta,Function ]= useState({organizations:undefined,urlPortal:""});
+    const [resultadoConsulta ,setResultadoConsulta]:[ResultadoConsultaOrganizations,Function ]= useState({organizations:undefined,urlPortal:""});
     const handleSubmit:FormEventHandler = async (event)=>{
-        console.log('ya hice request y este es elñ resuilt');
         let url:HTMLInputElement = document.getElementById("url_portal") as HTMLInputElement;
         event.preventDefault();
         const data = {
             url:  url.value
         }
-        const JSONdata = JSON.stringify(data);
-        // let ApiUrl = new URL('/portal/organizations');
         let queryString = new URLSearchParams(data).toString();
         const response= await fetch('/portal/organizations?'+queryString, {
                 method: 'GET',

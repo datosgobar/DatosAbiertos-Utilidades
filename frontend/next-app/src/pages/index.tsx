@@ -8,7 +8,7 @@ import Card from "../components/Card";
 
 const CARD_LIST = [
     { title:"Documentation" ,text: "Find in-depth information about Next.js features and API", href: "https://nextjs.org/docs" ,active:true},
-    { title:"Learn" ,text: "Learn about Next.js in an interactive course with quizzes!", href: "https://nextjs.org/learn" ,active:true},
+    { title:"Generador de Componentes" ,text: "Herramienta para formatear y previsualizar componentes, exportando luego el código html equivalente.", href: "https://datosgobar.github.io/series-tiempo-ar-generador-componentes/" ,active:true},
     { title:"Consultar  estructura de organizaciones" ,text: "Herramienta para consultar el árbol de una organización", href: "/OrganizationStructureForm" ,active:true},
     { title:"Restaurar Catálogos" ,text: "Herramienta para restaurar catálogos", href: "/CatalogRestoreForm" ,active:true},
     { title:"Series de tiempo" ,text: "Validador de series de tiempo", href: "/SeriesValidatorForm" ,active:true},
