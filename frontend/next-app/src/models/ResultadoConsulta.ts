@@ -1,4 +1,7 @@
 interface ResultadoConsulta {
     urlPortal:string
 }
-export type {ResultadoConsulta};
+interface ResponseValidacionCatalogo {
+    detail: {loc:string[],msg:string,type:string}[]
+}
+export type {ResultadoConsulta,ResponseValidacionCatalogo};
