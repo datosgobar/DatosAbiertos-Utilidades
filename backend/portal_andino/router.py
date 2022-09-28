@@ -43,17 +43,25 @@ def organizations_portal(
                 "en el DataJson que no están en el portal de CKAN, los genera."
 )
 async def catalog_restore(
-        file: UploadFile = File(description="El catálogo de origen que se restaura."),
+        file: UploadFile = File(description="El catálogo de origen que se restaura.", default=None),
         origin_url: str = Query(description="La URL del portal CKAN de origen."),
         destination_url: str = Query(description="La URL del portal CKAN de destino."),
         apikey: str = Query(description="La apikey de un usuario con los permisos que le permitan crear o "
-                                        "actualizar el dataset")
+                                        "actualizar el dataset"),
+        restore_organizations: bool = Query(description="Si se deben restaurar las organizaciones.", default=False)
 ):
-    with tempfile.NamedTemporaryFile() as catalog:
-        content = await file.read()
-        catalog.write(content)
-        catalog.seek(0)
-        pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
+
+    if restore_organizations:
+        update.organizations_restore(origin_url, destination_url, apikey)
+
+    if file:
+        with tempfile.NamedTemporaryFile() as catalog:
+            content = await file.read()
+            catalog.write(content)
+            catalog.seek(0)
+            pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
+    else:
+        pushed_datasets = update.catalog_restore(origin_url + "/catalog.xlsx", origin_url, destination_url, apikey)
 
     return pushed_datasets
 
