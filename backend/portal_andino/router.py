@@ -75,3 +75,19 @@ async def is_valid_catalog(
             return info.is_valid_catalog(catalog.name)
     else:
         return info.is_valid_catalog(url)
+
+
+@router.post(
+    "/catalog/validate",
+    name="Valida Catálogo",
+    description="Analiza la validez de la estructura de un catálogo"
+)
+async def is_valid_catalog(
+        file: Union[UploadFile, None] = File(default=None, description="El catálogo a validar."),
+        only_errors: bool = Query(description="Si solo se devuelven los errores.", default=False)
+):
+    with tempfile.NamedTemporaryFile() as catalog:
+        content = await file.read()
+        catalog.write(content)
+        catalog.seek(0)
+        return info.validate_catalog(catalog.name, only_errors=only_errors)
