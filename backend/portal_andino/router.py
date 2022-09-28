@@ -22,7 +22,7 @@ def organizations_portal(
     return info.get_organizations(url)
 
 
-@router.get(
+@router.post(
     "/organizations/restore",
     name="Restauración de organizaciones",
     description="Replica un árbol de organizaciones en el portal destino."
