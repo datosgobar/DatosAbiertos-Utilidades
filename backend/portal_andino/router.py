@@ -22,6 +22,20 @@ def organizations_portal(
     return info.get_organizations(url)
 
 
+@router.get(
+    "/organizations/restore",
+    name="Restauración de organizaciones",
+    description="Replica un árbol de organizaciones en el portal destino."
+)
+def organizations_portal(
+        origin_url: str = Query(description="La URL del portal CKAN de origen."),
+        destination_url: str = Query(description="La URL del portal CKAN de destino."),
+        apikey: str = Query(description="La apikey de un usuario con los permisos que le permitan crear o "
+                                        "actualizar el dataset")
+):
+    return update.organizations_restore(origin_url, destination_url, apikey)
+
+
 @router.post(
     "/catalog/restore",
     name="Restauración de catálogo",
