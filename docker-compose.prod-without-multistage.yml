@@ -4,14 +4,27 @@ services:
   next-app:
     container_name: next-app
     build:
-      context: frontend/next-app
-      dockerfile: frontend/next-app/prod-without-multistage.Dockerfile
-      args:
-        ENV_VARIABLE: ${ENV_VARIABLE}
-        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+      context: ./frontend/next-app/
+      dockerfile: prod-without-multistage.Dockerfile
+    environment:
+      ENV_VARIABLE: ${ENV_VARIABLE}
+      NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    volumes:
+      - ./frontend/next-app/src:/app/src
+      - ./frontend/next-app/public:/app/public
     restart: always
     ports:
       - 3000:3000
+    networks:
+      - datosgobar_utilidades_network
+  backend:
+    container_name: fastAPI
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:80
     networks:
       - datosgobar_utilidades_network
 
