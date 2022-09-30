@@ -11,11 +11,6 @@ def is_valid_catalog(catalog):
     return dj.is_valid_catalog(catalog)
 
 
-def validate_catalog(catalog):
+def validate_catalog(catalog, only_errors=False):
     dj = DataJson()
-    return dj.validate_catalog(catalog)
-
-
-def get_datasets(portal_url):
-    datasets = federation.get_datasets(portal_url + '/data.json')
-    return datasets
+    return dj.validate_catalog(catalog, only_errors=only_errors)

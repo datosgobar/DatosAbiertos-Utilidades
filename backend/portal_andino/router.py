@@ -23,23 +23,45 @@ def organizations_portal(
 
 
 @router.post(
+    "/organizations/restore",
+    name="Restauración de organizaciones",
+    description="Replica un árbol de organizaciones en el portal destino."
+)
+def organizations_portal(
+        origin_url: str = Query(description="La URL del portal CKAN de origen."),
+        destination_url: str = Query(description="La URL del portal CKAN de destino."),
+        apikey: str = Query(description="La apikey de un usuario con los permisos que le permitan crear o "
+                                        "actualizar el dataset")
+):
+    return update.organizations_restore(origin_url, destination_url, apikey)
+
+
+@router.post(
     "/catalog/restore",
     name="Restauración de catálogo",
     description="Restaura los datasets de un catálogo original al portal pasado por parámetro. Si hay temas presentes "
                 "en el DataJson que no están en el portal de CKAN, los genera."
 )
 async def catalog_restore(
-        file: UploadFile = File(description="El catálogo de origen que se restaura."),
+        file: UploadFile = File(description="El catálogo de origen que se restaura.", default=None),
         origin_url: str = Query(description="La URL del portal CKAN de origen."),
         destination_url: str = Query(description="La URL del portal CKAN de destino."),
         apikey: str = Query(description="La apikey de un usuario con los permisos que le permitan crear o "
-                                        "actualizar el dataset")
+                                        "actualizar el dataset"),
+        restore_organizations: bool = Query(description="Si se deben restaurar las organizaciones.", default=False)
 ):
-    with tempfile.NamedTemporaryFile() as catalog:
-        content = await file.read()
-        catalog.write(content)
-        catalog.seek(0)
-        pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
+
+    if restore_organizations:
+        update.organizations_restore(origin_url, destination_url, apikey)
+
+    if file:
+        with tempfile.NamedTemporaryFile() as catalog:
+            content = await file.read()
+            catalog.write(content)
+            catalog.seek(0)
+            pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
+    else:
+        pushed_datasets = update.catalog_restore(origin_url + "/catalog.xlsx", origin_url, destination_url, apikey)
 
     return pushed_datasets
 
@@ -63,12 +85,17 @@ async def is_valid_catalog(
         return info.is_valid_catalog(url)
 
 
-@router.get(
-    "/datasets",
-    name="Datasets",
-    description="Toma la url de un portal y devuelve los datasets."
+@router.post(
+    "/catalog/validate",
+    name="Valida Catálogo",
+    description="Analiza la validez de la estructura de un catálogo"
 )
-def organizations_portal(
-        url: str = Query(description="Datasets del portal")
+async def is_valid_catalog(
+        file: Union[UploadFile, None] = File(default=None, description="El catálogo a validar."),
+        only_errors: bool = Query(description="Si solo se devuelven los errores.", default=False)
 ):
-    return info.get_datasets(url)
+    with tempfile.NamedTemporaryFile() as catalog:
+        content = await file.read()
+        catalog.write(content)
+        catalog.seek(0)
+        return info.validate_catalog(catalog.name, only_errors=only_errors)
