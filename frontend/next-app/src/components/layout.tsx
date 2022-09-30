@@ -12,7 +12,7 @@ type Props = {
 
 const Layout = ({ children }: Props) =>{
     return (
-        <>
+        <div className={"flex-wrapper"}>
         <Navbar/>
 
         <main className={styles.main}>
@@ -20,6 +20,6 @@ const Layout = ({ children }: Props) =>{
         </main>
 
         <Footer/>
-    </>)
+    </div>)
 }
 export default Layout;
