@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 
 from portal_andino import router as portal
@@ -40,9 +40,10 @@ app.include_router(csv_app.router)
 
 
 @app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse("/docs")
+def root(request: Request):
+    root_path = request.scope.get("root_path")
+    return RedirectResponse(root_path + "/docs")
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
