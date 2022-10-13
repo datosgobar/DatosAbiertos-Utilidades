@@ -73,7 +73,9 @@ async def catalog_restore(
 )
 async def is_valid_catalog(
         file: Union[UploadFile, None] = File(default=None, description="El catálogo a validar."),
-        url: Union[str, None] = Query(default=None, description="La URL del portal que contiene el catalogo a validar.")
+        url: Union[str, None] = Query(
+            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/data.json"
+        )
 ):
     if file:
         with tempfile.NamedTemporaryFile() as catalog:
@@ -90,12 +92,18 @@ async def is_valid_catalog(
     name="Valida Catálogo",
     description="Analiza la validez de la estructura de un catálogo"
 )
-async def is_valid_catalog(
+async def validate_catalog(
         file: Union[UploadFile, None] = File(default=None, description="El catálogo a validar."),
+        url: Union[str, None] = Query(
+            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/data.json"
+        ),
         only_errors: bool = Query(description="Si solo se devuelven los errores.", default=False)
 ):
-    with tempfile.NamedTemporaryFile() as catalog:
-        content = await file.read()
-        catalog.write(content)
-        catalog.seek(0)
-        return info.validate_catalog(catalog.name, only_errors=only_errors)
+    if file:
+        with tempfile.NamedTemporaryFile() as catalog:
+            content = await file.read()
+            catalog.write(content)
+            catalog.seek(0)
+            return info.validate_catalog(catalog.name, only_errors=only_errors)
+    else:
+        return info.validate_catalog(url, only_errors=only_errors)

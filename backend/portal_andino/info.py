@@ -7,10 +7,10 @@ def get_organizations(portal_url):
 
 
 def is_valid_catalog(catalog):
-    dj = DataJson()
-    return dj.is_valid_catalog(catalog)
+    dj = DataJson(catalog)
+    return dj.is_valid_catalog()
 
 
 def validate_catalog(catalog, only_errors=False):
-    dj = DataJson()
-    return dj.validate_catalog(catalog, only_errors=only_errors)
+    dj = DataJson(catalog)
+    return dj.validate_catalog(only_errors=only_errors)
