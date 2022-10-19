@@ -1,14 +1,20 @@
 import tempfile
+from enum import Enum
 from typing import Union
 
 from fastapi import APIRouter, Query, UploadFile, File
 
-from . import update, info
+from . import update, info, ckanapi
 
 router = APIRouter(
     prefix="/portal",
     tags=["portal-andino"]
 )
+
+
+class OrderListOptions(str, Enum):
+    display_name = "Nombre del usuario"
+    id = "ID"
 
 
 @router.get(
@@ -27,7 +33,7 @@ def organizations_portal(
     name="Restauración de organizaciones",
     description="Replica un árbol de organizaciones en el portal destino."
 )
-def organizations_portal(
+def restore_organizations_portal(
         origin_url: str = Query(description="La URL del portal CKAN de origen."),
         destination_url: str = Query(description="La URL del portal CKAN de destino."),
         apikey: str = Query(description="La apikey de un usuario con los permisos que le permitan crear o "
@@ -149,3 +155,25 @@ async def report_catalog(
             return info.report_catalog(catalog.name)
     else:
         return info.report_catalog(url)
+
+
+@router.get(
+    "/portal/user_list",
+    name="Lista de usuarios",
+    description="Retorna una lista de las cuentas de usuarios del sitio",
+)
+async def user_list(
+        url: Union[str, None] = Query(
+            default=None, description="La URL del del sitio del. Ej.: https://datos.gob.ar"
+        ),
+        email: Union[str, None] = Query(
+            default=None, description="Filtra los usuarios retornados con aquellos en los cuales el email concuerde"
+        ),
+        apikey: Union[str, None] = Query(description="La apikey de un usuario administrador.", default=None),
+        order_by: OrderListOptions = Query(
+            default=OrderListOptions.id, description="Por qué campo ordenar la lista"
+        ),
+        all_fields: bool = Query(description="Si retorna todos los datos del usuario o sólo los nombres.", default=True)
+
+):
+    return ckanapi.user_list(url, email=email, apikey=apikey, order_by=order_by, all_fields=all_fields)
