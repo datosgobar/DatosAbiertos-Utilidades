@@ -1,6 +1,6 @@
 import tempfile
 from enum import Enum
-from typing import Union
+from typing import Union, List
 
 from fastapi import APIRouter, Query, UploadFile, File
 
@@ -177,3 +177,37 @@ async def user_list(
 
 ):
     return ckanapi.user_list(url, email=email, apikey=apikey, order_by=order_by, all_fields=all_fields)
+
+
+@router.get(
+    "/catalog/package_delete",
+    name="Elimina datasets del portal",
+    description="Elimina uno, varios o todos los datasets del portal",
+)
+async def package_delete(
+        url: Union[str, None] = Query(
+            description="La URL del del sitio del. Ej.: https://datos.gob.ar",
+            default=None
+        ),
+        dataset_ids: Union[List[str], None] = Query(
+            description="El o los id's de los datasets a eliminar. ATENCION: Si no se especifica se borrarán todos.",
+            default=None
+        ),
+        apikey: Union[str, None] = Query(
+            description="La apikey de un usuario administrador.",
+            default=None
+        ),
+        purge: bool = Query(
+            description="Si solo se marcan como eliminados (false); o si se borran de la base de datos (true). "
+                        "ATENCION: Esta última opción no se puede deshacer.",
+            default=False
+        )
+
+):
+    if not dataset_ids:
+        dataset_ids = ckanapi.dataset_list(url)
+
+    if not isinstance(dataset_ids, List):
+        return {'response': 'No hay datasets para eliminar'}
+
+    return ckanapi.dataset_delete(url, apikey, dataset_ids, purge)
