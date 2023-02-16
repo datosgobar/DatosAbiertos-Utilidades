@@ -1,6 +1,7 @@
 import os
 from tempfile import NamedTemporaryFile as NTF
 from enum import Enum
+from typing import Union
 
 from fastapi import APIRouter, UploadFile, File, Query
 
@@ -47,23 +48,33 @@ async def csv_info(
     description="Compara los encabezados de un csv contra los valores de un catálogo en la columna 'field_title' "
                 "de la hoja 'field' para un 'distribution_identifier' dado.",
 )
-async def csv_info(
-        catalog: UploadFile = File(description="El catálogo con los campos a comparar."),
-        dataset_id: str = Query(description="El distribution_identifier en el catálogo."),
+async def catalog_heads(
+        url: Union[str, None] = Query(
+                    default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/data.json"
+                ),
+        catalog: Union[UploadFile, None] = File(description="El catálogo con los campos a comparar.", default=None),
+        distribution_id: str = Query(description="El distribution_identifier en el catálogo."),
         csv: UploadFile = File(description="El archivo csv que contiene los encabezados a comparar.")
 ):
-    content_catalog = await catalog.read()
+    if not url and not catalog:
+        return {'error': 'debe especificar una url o subir un catalogo'}
+    if not url:
+        content_catalog = await catalog.read()
     content_csv = await csv.read()
 
     with NTF() as tmp_file_catalog, NTF() as tmp_file_csv:
-        tmp_file_catalog.write(content_catalog)
-        tmp_file_catalog.flush()
-        tmp_file_catalog.seek(0)
+        if not url:
+            tmp_file_catalog.write(content_catalog)
+            tmp_file_catalog.flush()
+            tmp_file_catalog.seek(0)
+            catalog_name = tmp_file_catalog.name
+        else:
+            catalog_name = url
 
         tmp_file_csv.write(content_csv)
         tmp_file_csv.flush()
         tmp_file_csv.seek(0)
 
-        response = compare_heads(tmp_file_catalog.name, tmp_file_csv.name, dataset_id)
+        response = compare_heads(catalog_name, tmp_file_csv.name, distribution_id)
 
     return response
