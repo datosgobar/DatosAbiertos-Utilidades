@@ -17,6 +17,10 @@ class OrderListOptions(str, Enum):
     id = "ID"
 
 
+class CatalogFormat(str, Enum):
+    xlsx = "XLSX"
+    json = "JSON"
+
 @router.get(
     "/organizations",
     name="Organizaciones",
@@ -211,3 +215,43 @@ async def package_delete(
         return {'response': 'No hay datasets para eliminar'}
 
     return ckanapi.dataset_delete(url, apikey, dataset_ids, purge)
+
+
+@router.post(
+    "/catalog/series/validate",
+    name="Valida series de tiempo",
+    description="Analiza la validez de la estructura de una o varias series de tiempo"
+)
+async def validate_series(
+        url: Union[str, None] = Query(
+            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/catalog.xlsx"
+        ),
+        catalog: Union[UploadFile, None] = File(description="El catálogo con las series a validar.", default=None),
+        catalog_format: CatalogFormat = Query(
+            description="Formato en que suministrará el catálogo"
+        ),
+        distribution_ids: Union[List[str], None] = Query(
+            description="El o los id's de las distribuciones a validar. Si no se especifica alguna se validarán todas "
+                        "las del catálogo.",
+            default=None
+        ),
+):
+    content_catalog = None
+
+    if not url and not catalog:
+        return {'error': 'debe especificar una url o subir un catalogo'}
+    if not url:
+        content_catalog = await catalog.read()
+
+    with tempfile.NamedTemporaryFile() as tmp_file_catalog, tempfile.NamedTemporaryFile() as tmp_file_csv:
+        if not url:
+            tmp_file_catalog.write(content_catalog)
+            tmp_file_catalog.flush()
+            tmp_file_catalog.seek(0)
+            catalog_name = tmp_file_catalog.name
+        else:
+            catalog_name = url
+
+        response = info.validate_series(catalog_name, catalog_format.name, distribution_ids)
+
+    return response
