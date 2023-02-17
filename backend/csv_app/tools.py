@@ -26,17 +26,34 @@ def compare_heads(catalog, csv, distribution_identifier):
         dtype={'distribution_identifier': "string"}
     )
     df_field.query('distribution_identifier == @distribution_identifier', inplace=True)
-    fields_catalog_set = set(df_field['field_title'])
-
     df_csv = pd.read_csv(csv)
-    heads_csv_set = set(df_csv.columns.values)
+
+    catalog_field_list = list(df_field['field_title'])
+    csv_field_list = list(df_csv.columns.values)
+
+    all_fields_set = set(catalog_field_list).union(csv_field_list)
+    position_list = []
+    match_index = True
+    for field in all_fields_set:
+        catalog_index = "-" if field not in catalog_field_list else catalog_field_list.index(field)
+        csv_index = "-" if field not in csv_field_list else csv_field_list.index(field)
+        match_index = match_index and str(catalog_index) == str(csv_index)
+        position_list.append(
+            {field: [catalog_index, csv_index]}
+        )
 
     response = {
         'id distribución': distribution_identifier,
-        'Campos en csv': heads_csv_set,
-        'Campos en catálogo': fields_catalog_set,
-        'Faltantes en csv': fields_catalog_set - heads_csv_set,
-        'Faltantes en catálogo': heads_csv_set - fields_catalog_set
+        'Campos en csv': csv_field_list,
+        'Campos en catálogo': catalog_field_list,
+        'Coincidencia de indices': match_index,
     }
+
+    if not match_index:
+        response.update({
+            'Faltantes en csv': set(catalog_field_list) - set(csv_field_list),
+            'Faltantes en catálogo': set(csv_field_list) - set(catalog_field_list),
+            'Posiciones de campos [catalogo, csv]': position_list
+        })
 
     return response
