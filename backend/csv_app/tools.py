@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 
 def get_info(tmp_file_source_name):
@@ -19,6 +20,9 @@ def get_info(tmp_file_source_name):
 
 
 def compare_heads(catalog, csv, distribution_identifier):
+    allowed_characters = re.compile(r'^[a-z0-9_]+$')
+    max_length = 50
+
     df_field = pd.read_excel(
         catalog,
         sheet_name='field',
@@ -42,6 +46,18 @@ def compare_heads(catalog, csv, distribution_identifier):
             {field: [catalog_index, csv_index]}
         )
 
+    invalid_fields = {
+        'catalog': [],
+        'csv': []
+    }
+    for field in catalog_field_list:
+        if len(field) > max_length or not allowed_characters.match(field):
+            invalid_fields['catalog'].append(field)
+
+    for field in csv_field_list:
+        if len(field) > max_length or not allowed_characters.match(field):
+            invalid_fields['csv'].append(field)
+
     response = {
         'id distribución': distribution_identifier,
         'Campos en csv': csv_field_list,
@@ -54,6 +70,13 @@ def compare_heads(catalog, csv, distribution_identifier):
             'Faltantes en csv': set(catalog_field_list) - set(csv_field_list),
             'Faltantes en catálogo': set(csv_field_list) - set(catalog_field_list),
             'Posiciones de campos [catalogo, csv]': position_list
+        })
+    if invalid_fields['catalog'] or invalid_fields['csv']:
+        response.update({
+            'Campos inválidos': {
+                'Catalogo': invalid_fields['catalog'],
+                'CSV': invalid_fields['csv']
+            }
         })
 
     return response
