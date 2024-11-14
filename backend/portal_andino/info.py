@@ -54,6 +54,7 @@ def validate_series(catalog, catalog_format, distribution_ids):
             error_list = get_distribution_errors(datajson, distribution_id)
             found_issues = len(error_list)
             detail = [err.args[0] for err in error_list]
+            #comparar orden
         except Exception as e:
             found_issues = 1
             detail = [str(e)]

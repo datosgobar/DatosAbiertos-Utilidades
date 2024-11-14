@@ -20,5 +20,8 @@ class TestCsv(unittest.TestCase):
 
         self.assertEqual(26, len(result['Campos en csv']))
         self.assertEqual(26, len(result['Campos en catálogo']))
-        self.assertEqual(0, len(result['Faltantes en catálogo']))
-        self.assertEqual(0, len(result['Faltantes en csv']))
+        self.assertEqual(2, len(result['Campos faltantes en catálogo']))
+        self.assertEqual(2, len(result['Campos faltantes en csv']))
+        self.assertEqual(2, len(result['Diferencias en el orden de los encabezados']))
+        self.assertEqual(0, len(result['Campos inválidos en csv']))
+        self.assertEqual(2, len(result['Campos inválidos en catálogo']))
