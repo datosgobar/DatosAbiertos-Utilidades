@@ -20,9 +20,20 @@ def get_info(tmp_file_source_name):
 
 
 def compare_heads(catalog, csv, distribution_identifier):
+    response = {
+        'id distribución': distribution_identifier,
+        'Campos en csv': [],
+        'Campos en catálogo':[],
+        "Campos faltantes en csv": [],
+        "Campos faltantes en catálogo": [],
+        "Campos inválidos en csv": [],
+        "Campos inválidos en catálogo": [],
+        "Diferencias en el orden de los encabezados": [],
+    }
     allowed_characters = re.compile(r'^[a-z0-9_]+$')
     max_length = 50
 
+    # Load catalog and filter by distribution_identifier
     df_field = pd.read_excel(
         catalog,
         sheet_name='field',
@@ -30,53 +41,38 @@ def compare_heads(catalog, csv, distribution_identifier):
         dtype={'distribution_identifier': "string"}
     )
     df_field.query('distribution_identifier == @distribution_identifier', inplace=True)
+
+    # Load csv
     df_csv = pd.read_csv(csv)
 
     catalog_field_list = list(df_field['field_title'])
+    response["Campos en catálogo"]=catalog_field_list
     csv_field_list = list(df_csv.columns.values)
+    response["Campos en csv"] = csv_field_list
 
-    all_fields_set = set(catalog_field_list).union(csv_field_list)
-    position_list = []
-    match_index = True
-    for field in all_fields_set:
-        catalog_index = "-" if field not in catalog_field_list else catalog_field_list.index(field)
-        csv_index = "-" if field not in csv_field_list else csv_field_list.index(field)
-        match_index = match_index and str(catalog_index) == str(csv_index)
-        position_list.append(
-            {field: [catalog_index, csv_index]}
-        )
+    # Check for missing fields
+    set_diff_catalog = set(catalog_field_list) - set(csv_field_list)
+    set_diff_csv = set(csv_field_list) - set(catalog_field_list)
 
-    invalid_fields = {
-        'catalog': [],
-        'csv': []
-    }
+    if set_diff_catalog:
+        response["Campos faltantes en csv"] = list(set_diff_catalog)
+    if set_diff_csv:
+        response["Campos faltantes en catálogo"] = list(set_diff_csv)
+
+    # Check for order differences
+    differences = [(i, a, b) for i, (a, b) in enumerate(zip(catalog_field_list, csv_field_list)) if a != b]
+    response["Diferencias en el orden de los encabezados"] = [
+        f"Posición {i}: '{a}' en catálogo, '{b}' en csv" for i, a, b in differences
+    ]
+
+    # Check for invalid fields in catalog
     for field in catalog_field_list:
         if len(field) > max_length or not allowed_characters.match(field):
-            invalid_fields['catalog'].append(field)
+            response["Campos inválidos en catálogo"].append(field)
 
+    # Check for invalid fields in csv
     for field in csv_field_list:
         if len(field) > max_length or not allowed_characters.match(field):
-            invalid_fields['csv'].append(field)
-
-    response = {
-        'id distribución': distribution_identifier,
-        'Campos en csv': csv_field_list,
-        'Campos en catálogo': catalog_field_list,
-        'Coincidencia de indices': match_index,
-    }
-
-    if not match_index:
-        response.update({
-            'Faltantes en csv': set(catalog_field_list) - set(csv_field_list),
-            'Faltantes en catálogo': set(csv_field_list) - set(catalog_field_list),
-            'Posiciones de campos [catalogo, csv]': position_list
-        })
-    if invalid_fields['catalog'] or invalid_fields['csv']:
-        response.update({
-            'Campos inválidos': {
-                'Catalogo': invalid_fields['catalog'],
-                'CSV': invalid_fields['csv']
-            }
-        })
+            response["Campos inválidos en csv"].append(field)
 
     return response
