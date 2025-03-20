@@ -1,6 +1,7 @@
 import tempfile
 from enum import Enum
 from typing import Union, List
+import os
 
 from fastapi import APIRouter, Query, UploadFile, File
 
@@ -20,6 +21,7 @@ class OrderListOptions(str, Enum):
 class CatalogFormat(str, Enum):
     xlsx = "XLSX"
     json = "JSON"
+
 
 @router.get(
     "/organizations",
@@ -65,11 +67,12 @@ async def catalog_restore(
         update.organizations_restore(origin_url, destination_url, apikey)
 
     if file:
-        with tempfile.NamedTemporaryFile() as catalog:
+        with tempfile.NamedTemporaryFile as catalog:
             content = await file.read()
             catalog.write(content)
             catalog.seek(0)
             pushed_datasets = update.catalog_restore(catalog.name, origin_url, destination_url, apikey)
+
     else:
         pushed_datasets = update.catalog_restore(origin_url + "/catalog.xlsx", origin_url, destination_url, apikey)
 
@@ -88,7 +91,7 @@ async def is_valid_catalog(
         )
 ):
     if file:
-        with tempfile.NamedTemporaryFile() as catalog:
+        with tempfile.NamedTemporaryFile(delete=False) as catalog:
             content = await file.read()
             catalog.write(content)
             catalog.seek(0)
@@ -110,7 +113,7 @@ async def validate_catalog(
         only_errors: bool = Query(description="Si solo se devuelven los errores.", default=False)
 ):
     if file:
-        with tempfile.NamedTemporaryFile() as catalog:
+        with tempfile.NamedTemporaryFile(delete=False) as catalog:
             content = await file.read()
             catalog.write(content)
             catalog.seek(0)
@@ -131,7 +134,7 @@ async def summary_catalog(
         ),
 ):
     if file:
-        with tempfile.NamedTemporaryFile() as catalog:
+        with tempfile.NamedTemporaryFile(delete=False) as catalog:
             content = await file.read()
             catalog.write(content)
             catalog.seek(0)
@@ -228,7 +231,7 @@ async def validate_series(
         ),
         catalog: Union[UploadFile, None] = File(description="El catálogo con las series a validar.", default=None),
         catalog_format: CatalogFormat = Query(
-            description="Formato en que suministrará el catálogo"
+            description="Formato en que se suministrará el catálogo"
         ),
         distribution_ids: Union[List[str], None] = Query(
             description="El o los id's de las distribuciones a validar. Si no se especifica alguna se validarán todas "
@@ -243,7 +246,7 @@ async def validate_series(
     if not url:
         content_catalog = await catalog.read()
 
-    with tempfile.NamedTemporaryFile() as tmp_file_catalog, tempfile.NamedTemporaryFile() as tmp_file_csv:
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
         if not url:
             tmp_file_catalog.write(content_catalog)
             tmp_file_catalog.flush()
