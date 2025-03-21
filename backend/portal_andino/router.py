@@ -1,6 +1,7 @@
 import tempfile
 from enum import Enum
 from typing import Union, List
+from backend.csv_app.tools import catalog_from_url
 import os
 
 from fastapi import APIRouter, Query, UploadFile, File
@@ -253,7 +254,7 @@ async def validate_series(
             tmp_file_catalog.seek(0)
             catalog_name = tmp_file_catalog.name
         else:
-            catalog_name = url
+            catalog_name = catalog_from_url(url)
 
         response = info.validate_series(catalog_name, catalog_format.name, distribution_ids)
 
