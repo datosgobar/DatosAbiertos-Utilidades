@@ -2,11 +2,11 @@ import os
 from tempfile import NamedTemporaryFile as NTF
 import tempfile
 from enum import Enum
-from typing import Union
-
+from typing import Union, List
 from fastapi import APIRouter, UploadFile, File, Query
-
-from .tools import get_info, compare_heads
+from pydatajson import DataJson
+from .tools import get_info, compare_heads, catalog_from_url
+from backend.portal_andino.router import CatalogFormat
 
 router = APIRouter(
     prefix="/csv",
@@ -43,6 +43,7 @@ async def csv_info(
     return response
 
 
+
 @router.post(
     "/catalog/heads",
     name="Encabezados",
@@ -51,42 +52,47 @@ async def csv_info(
 )
 async def catalog_heads(
         url: Union[str, None] = Query(
-            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/data.json"
+            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/catalog.xlsx"
         ),
-        catalog: Union[UploadFile, None] = File(description="El catálogo con los campos a comparar.", default=None),
-        distribution_id: str = Query(description="El distribution_identifier en el catálogo."),
-        csv: UploadFile = File(description="El archivo csv que contiene los encabezados a comparar.")
+        catalog: Union[UploadFile, None] = File(description="El catálogo al que pertenecen distribuciones a validar.", default=None),
+        catalog_format: CatalogFormat = Query(
+            description="Formato en que se suministrará el catálogo"
+        ),
+        distribution_ids: Union[List[str], None] = Query(
+            description="El o los id's de las distribuciones a validar. Si no se especifica alguna se validarán todas "
+                        "las del catálogo.",
+            default=None
+        ),
+
 ):
 
     if not url and not catalog:
         return {'error': 'Debe especificar una URL o subir un catálogo'}
 
+    suffix = "xlsx"
+    if catalog_format == CatalogFormat.json:
+        suffix = "json"
+    elif catalog_format == CatalogFormat.xlsx:
+        suffix = "xlsx"
 
-    if catalog:
-        content_catalog = await catalog.read()
-    content_csv = await csv.read()
-
-    # Create temporary files for both catalog and CSV
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog, tempfile.NamedTemporaryFile(
-            delete=False) as tmp_file_csv:
-
-        # If catalog is provided as a file, write its content to the temp file
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
         if catalog:
+            content_catalog = await catalog.read()
             tmp_file_catalog.write(content_catalog)
-            tmp_file_catalog.flush()  # Ensure all data is written to disk
-            tmp_file_catalog.seek(0)  # Move to the beginning for reading
+            tmp_file_catalog.flush()
+            tmp_file_catalog.seek(0)
             catalog_name = tmp_file_catalog.name
         else:
-            # If using URL, set catalog_name to URL directly
-            catalog_name = url
+            catalog_name = catalog_from_url(url)
+        print(catalog_name)
 
-        # Write the CSV file content to the temporary file and prepare it for reading
-        tmp_file_csv.write(content_csv)
-        tmp_file_csv.flush()  # Ensure data is written
-        tmp_file_csv.seek(0)  # Move to beginning of the file for reading
+        if suffix == "json":
+            excel_cat = DataJson(catalog_name)
+            excel_cat.to_xlsx("catalog.xlsx")
+            catalog_name = "catalog.xlsx"
 
-        # Call the comparison function, passing the temporary file paths or URL
-        response = compare_heads(catalog_name, tmp_file_csv.name, distribution_id)
+        response = compare_heads(catalog_name, distribution_ids)
+        if os.path.exists("catalog.xlsx"):
+           os.remove("catalog.xlsx")
 
-    # Return the response from compare_heads
     return response
