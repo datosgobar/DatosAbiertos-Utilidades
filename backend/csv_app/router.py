@@ -2,7 +2,7 @@ import os
 from tempfile import NamedTemporaryFile as NTF
 import tempfile
 from enum import Enum
-from typing import Union, List
+from typing import Union, List, Optional
 from fastapi import APIRouter, UploadFile, File, Query
 from pydatajson import DataJson
 from .tools import get_info, compare_heads, catalog_from_url
@@ -54,7 +54,8 @@ async def catalog_heads(
         url: Union[str, None] = Query(
             default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/catalog.xlsx"
         ),
-        catalog: Union[UploadFile, None] = File(description="El catálogo al que pertenecen distribuciones a validar.", default=None),
+        catalog: Union[UploadFile, None] = File(default=None,description="El catálogo al que pertenecen distribuciones a validar."),
+
         catalog_format: CatalogFormat = Query(
             description="Formato en que se suministrará el catálogo"
         ),
@@ -68,6 +69,8 @@ async def catalog_heads(
 
     if not url and not catalog:
         return {'error': 'Debe especificar una URL o subir un catálogo'}
+    if url and catalog:
+        return {'error': 'Subir o url o archivo de catálogo'}
 
     suffix = "xlsx"
     if catalog_format == CatalogFormat.json:
@@ -75,24 +78,24 @@ async def catalog_heads(
     elif catalog_format == CatalogFormat.xlsx:
         suffix = "xlsx"
 
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
-        if catalog:
-            content_catalog = await catalog.read()
-            tmp_file_catalog.write(content_catalog)
-            tmp_file_catalog.flush()
-            tmp_file_catalog.seek(0)
-            catalog_name = tmp_file_catalog.name
-        else:
-            catalog_name = catalog_from_url(url)
-        print(catalog_name)
+    if url:
+        catalog_name = catalog_from_url(url)
+    else:
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
+                content_catalog = await catalog.read()
+                tmp_file_catalog.write(content_catalog)
+                tmp_file_catalog.flush()
+                tmp_file_catalog.seek(0)
+                catalog_name = tmp_file_catalog.name
 
-        if suffix == "json":
-            excel_cat = DataJson(catalog_name)
-            excel_cat.to_xlsx("catalog.xlsx")
-            catalog_name = "catalog.xlsx"
 
-        response = compare_heads(catalog_name, distribution_ids)
-        if os.path.exists("catalog.xlsx"):
-           os.remove("catalog.xlsx")
+    if suffix == "json":
+       excel_cat = DataJson(catalog_name)
+       excel_cat.to_xlsx("catalog.xlsx")
+       catalog_name = "catalog.xlsx"
+
+    response = compare_heads(catalog_name, distribution_ids)
+    if os.path.exists("catalog.xlsx"):
+       os.remove("catalog.xlsx")
 
     return response
