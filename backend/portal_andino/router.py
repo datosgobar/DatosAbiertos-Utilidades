@@ -257,6 +257,6 @@ async def validate_series(
             catalog_name = tmp_file_catalog.name
 
 
-    response = info.validate_series(catalog_name, catalog_format.name, distribution_ids)
+    response = await info.validate_series(catalog_name, catalog_format.name, distribution_ids)
 
     return response
