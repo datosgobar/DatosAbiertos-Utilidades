@@ -10,12 +10,13 @@ class TestCsv(unittest.TestCase):
         response = get_info(csv)
         self.assertEqual(0, response['Valores nulos'])
 
-    def test_compare_heads(self):
+
+    async def test_compare_heads(self):
         catalog = os.path.join(os.getcwd(), "files/catalog-obras-28-10-21.xlsx")
         # csv = os.path.join(os.getcwd(), "files/cob-hog-agua.csv")
         distribution_identifier = "3.1"
-
-        result = compare_heads(catalog, distribution_identifier)
+        catalog_format = 'xlsx'
+        result = await compare_heads(catalog,catalog_format,distribution_identifier)
         print(result)
 
         self.assertEqual(25, len(result[distribution_identifier]['Campos en csv']))
