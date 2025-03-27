@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import httpx
 import requests
+import asyncio
 import tempfile
 from pydatajson import DataJson
 import io
@@ -24,23 +25,6 @@ def get_info(tmp_file_source_name):
 
     return response
 
-
-async def csv_from_url(url: str):
-    try:
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            response = await client.get(url)
-
-            if response.status_code != 200:
-                return f"Error {response.status_code}: Unable to fetch CSV"
-
-            content = response.text
-            df = pd.read_csv(io.StringIO(content), dtype=str, encoding="utf-8")
-
-        return df
-    except Exception as e:
-        return str(e)
-
-
 def catalog_from_url(url: str):
     try:
         response = requests.get(url)
@@ -53,6 +37,16 @@ def catalog_from_url(url: str):
     except Exception as e:
         return str(e)
 
+async def csv_from_url(url: str,client):
+    try:
+        response = await client.get(url)
+        if response.status_code != 200:
+             return f"Error {response.status_code}: No se pude obtener csv"
+        content = await response.aread()
+        df = pd.read_csv(io.StringIO(content.decode()), dtype=str, encoding="utf-8")
+        return df
+    except Exception as e:
+        return str(e)
 
 async def compare_heads(catalog,catalog_format, ids):
 
@@ -66,64 +60,48 @@ async def compare_heads(catalog,catalog_format, ids):
     if isinstance(ids, str):
         ids = [ids]
 
-    for distribution_identifier in ids:
-        allowed_characters = re.compile(r'^[a-z0-9_]+$')
-        max_length = 50
-        found = False
-        for dataset in datasets:
-             for distribution in dataset.get("distribution", []):
-                 if distribution.get("identifier") == distribution_identifier:
-                    try:
-                        download_url = distribution["downloadURL"]
-                        fields = distribution["field"]
-                        df_csv = await csv_from_url(download_url)
-                        if isinstance(df_csv, pd.DataFrame) and not df_csv.empty:
-                            df_csv = df_csv.drop(columns=df_csv.filter(like="Unnamed").columns)
-                            response[distribution_identifier] = {
-                                'Campos en csv': [],
-                                'Campos en catálogo': [],
-                                "Campos faltantes en csv": [],
-                                "Campos faltantes en catálogo": [],
-                                "Campos inválidos en csv": [],
-                                "Campos inválidos en catálogo": [],
-                                "Diferencias en el orden de los encabezados": [],
-                            }
-
-                            catalog_field_list = [field['title'] for field in fields]
-                            response[distribution_identifier]["Campos en catálogo"] = catalog_field_list
-                            csv_field_list = list(df_csv.columns.values)
-                            response[distribution_identifier]["Campos en csv"] = csv_field_list
-
-                            set_diff_catalog = set(catalog_field_list) - set(csv_field_list)
-                            set_diff_csv = set(csv_field_list) - set(catalog_field_list)
-
-                            if set_diff_catalog:
-                                response[distribution_identifier]["Campos faltantes en csv"] = list(set_diff_catalog)
-                            if set_diff_csv:
-                                response[distribution_identifier]["Campos faltantes en catálogo"] = list(set_diff_csv)
-
-                            differences = [(i, a, b) for i, (a, b) in enumerate(zip(catalog_field_list, csv_field_list)) if a != b]
-                            response[distribution_identifier]["Diferencias en el orden de los encabezados"] = [
-                                f"Posición {i}: '{a}' en catálogo, '{b}' en csv" for i, a, b in differences
-                            ]
-
-                            for field in catalog_field_list:
-                                if len(field) > max_length or not allowed_characters.match(field):
-                                    response[distribution_identifier]["Campos inválidos en catálogo"].append(field)
-
-                            for field in csv_field_list:
-                                if len(field) > max_length or not allowed_characters.match(field):
-                                    response[distribution_identifier]["Campos inválidos en csv"].append(field)
-
-                        else:
-                            response[distribution_identifier] = {}
-                            response[distribution_identifier]["ERROR"] = "No se puedo procesar distribución 🤨"
-                    except:
-                        response[distribution_identifier] = {}
-                        response[distribution_identifier]["ERROR"] = "No se encontró campos o url para analizar 🤨"
-                    found = True
-                    break
-             if found:
-                 break
-
+    allowed_characters = re.compile(r'^[a-z0-9_]+$')
+    max_length = 50
+    distributions = [
+        d for ds in datasets for d in ds.get("distribution", []) if d.get("identifier") in ids]
+    found_ids = {d.get("identifier") for d in distributions}
+    missing_ids = set(ids) - found_ids
+    async with httpx.AsyncClient(
+        timeout=httpx.Timeout(30.0),
+        limits=httpx.Limits(max_connections=50),
+        follow_redirects=True,
+    ) as client:
+        tasks =[process_distribution(d, allowed_characters, max_length, client) for d in distributions]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+    response = {identifier: result for identifier, result in results}
+    response["distribuciones no encontradas"] = missing_ids
     return response
+async def process_distribution(distribution, allowed_characters,max_length,client):
+
+    try:
+      dist_id = distribution.get('identifier')
+      download_url = distribution["downloadURL"]
+      fields = distribution["field"]
+      df_csv = await csv_from_url(download_url, client)
+      if not isinstance(df_csv, pd.DataFrame) or df_csv.empty:
+          return dist_id, {"ERROR": "No se puedo procesar distribución 🤨"}
+      df_csv = df_csv.drop(columns=df_csv.filter(like="Unnamed").columns)
+      catalog_field_list = [field['title'] for field in fields]
+      csv_field_list = list(df_csv.columns.values)
+      response = {
+            'Campos en csv': csv_field_list,
+            'Campos en catálogo': catalog_field_list,
+            "Campos faltantes en csv": list(set(catalog_field_list) - set(csv_field_list)),
+            "Campos faltantes en catálogo": list(set(csv_field_list) - set(catalog_field_list)),
+            "Campos inválidos en csv": [f for f in csv_field_list if len(f) > max_length or not allowed_characters.match(f)],
+            "Campos inválidos en catálogo": [f for f in catalog_field_list if len(f) > max_length or not allowed_characters.match(f)],
+            "Diferencias en el orden de los encabezados": [
+                f"Posición {i}: '{a}' en catálogo, '{b}' en csv"
+                for i, (a, b) in enumerate(zip(catalog_field_list, csv_field_list)) if a != b
+            ]
+        }
+
+      return dist_id, response
+
+    except Exception as e:
+        return dist_id, {"ERROR": str(e)}
