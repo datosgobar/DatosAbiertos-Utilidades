@@ -3,7 +3,9 @@ from series_tiempo_ar import TimeSeriesDataJson
 from series_tiempo_ar.validations import get_distribution_errors
 from backend.csv_app.tools import csv_from_url
 import pandas as pd
+import httpx
 from typing import Union, List, Dict
+import asyncio
 
 
 def get_organizations(portal_url):
@@ -31,19 +33,17 @@ def report_catalog(catalog):
     return dj.generate_datasets_report(catalog)
 
 
-def validate_series(catalog, catalog_format, distribution_ids):
+async def validate_series(catalog, catalog_format, distribution_ids):
     report = {}
 
     try:
         datajson = TimeSeriesDataJson(
             catalog, catalog_format=catalog_format
         )
+        if isinstance(distribution_ids, str):
+            distribution_ids = [distribution_ids]
         if not distribution_ids:
-            distributions_ts = set()
-            for field in datajson.fields:
-                if field.get('specialType', "") == 'time_index':
-                    distributions_ts.add(field['distribution_identifier'])
-            distribution_ids = list(distributions_ts)
+            distribution_ids = [field['distribution_identifier'] for field in datajson.fields if field.get('specialType', "") == 'time_index']
         report['distribution'] = {}
         for distribution_id in distribution_ids:
             try:
@@ -55,13 +55,25 @@ def validate_series(catalog, catalog_format, distribution_ids):
                 found_issues = 1
                 detail = [str(e)]
 
-            order_problems = compare_headers_ts(datajson, distribution_id)
             report['distribution'].update({distribution_id: {
                 'found_issues': found_issues,
                 'detail': detail,
-                'order_problems': order_problems,
             }})
+        datasets = datajson['dataset']
+        distributions = [
+            d for ds in datasets for d in ds.get("distribution", []) if d.get("identifier") in distribution_ids]
+        async with httpx.AsyncClient(
+                timeout=httpx.Timeout(30.0),
+                limits=httpx.Limits(max_connections=50),
+                follow_redirects=True,
+        ) as client:
+            tasks = [compare_headers_ts(d, client) for d in distributions]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
 
+        report['order_problems'] = {
+            identifier: result if isinstance(result, (str, list)) else str(result)
+            for identifier, result in zip(distribution_ids, results)
+        }
         return report
 
     except Exception as e:
@@ -72,7 +84,7 @@ def validate_series(catalog, catalog_format, distribution_ids):
         return report
 
 
-def compare_headers_ts(data_json: Dict, distribution_id: str) -> Union[str, List[str]]:
+async def compare_headers_ts(d,client):
     """
     Compara los campos mencionados en el catálogo con los encabezados de la distribución para una distribución dada.
 
@@ -84,47 +96,34 @@ def compare_headers_ts(data_json: Dict, distribution_id: str) -> Union[str, List
         Union[str, List[str]]: Un mensaje si el orden de los campos coinciden en catálogo y distribución,
         de lo contrario una lista con las diferencias encontradas"
     """
-    datasets = data_json.get("dataset", [])
-    catalog_fields = None
-    download_url = None
-    titles = None
-    for dataset in datasets:
-        for distribution in dataset.get("distribution", []):
-            dist_id = distribution.get("identifier")
-            if dist_id == distribution_id:
-                download_url = distribution["downloadURL"]
-                catalog_fields = distribution.get("field")
-                if catalog_fields:
-                    break
-        if catalog_fields is not None:
+    try:
+       download_url = d["downloadURL"]
+       catalog_fields = d['field']
+       if catalog_fields is not None:
             titles = [field.get("title") for field in catalog_fields if "title" in field]
-            break
+       else:
+            return f"No se pudo comprobar orden: no hay campos en el catálogo para la distribución: '{d['identifier']}🤨"
 
-    if catalog_fields is None:
-        return f"No se pudo comprobar orden: no hay campos en el catálogo para la distribución: '{distribution_id}'🤨"
+       differences_summary = []
+       if download_url is not None:
+            df_csv = await csv_from_url(download_url,client)
+            if not isinstance(df_csv, pd.DataFrame) or df_csv.empty:
+              return f" No se pudo comprobar orden: El CSV '{download_url}' no es válido 🤨"
+            csv_fields = list(df_csv.columns)
+            differences_summary.append(
+                [f"Posición {i}: '{a}' en catálogo, '{b}' en csv" for i, (a, b) in enumerate(zip(titles, csv_fields)) if
+                 a != b]
+                or ["Encabezados en mismo orden en catálogo y en distribución 🎉"]
+            )
+            return differences_summary
 
-    differences_summary = []
+       else:
+           return f" No hay url de distribución🤨"
+    except Exception as e:
+        return f"No se puedo comprobar orden: no se pudo descargar el CSV: {e} 🤨"
 
-    if download_url is not None:
-        try:
-            df_csv = csv_from_url(download_url)
-        except Exception as e:
-            return f"No se puedo comprobar orden: no se pudo descargar el CSV '{download_url}': {e} 🤨"
 
-        if not isinstance(df_csv, pd.DataFrame) or df_csv.empty:
-            return f" No se pudo comprobar orden: El CSV '{download_url}' no es válido 🤨"
 
-        csv_fields = list(df_csv.columns)
 
-        differences = [
-            f"Posición {i}: '{a}' en catálogo, '{b}' en csv"
-            for i, (a, b) in enumerate(zip(titles, csv_fields))
-            if a != b
-        ]
 
-        if not differences:
-            differences_summary.append("Encabezados en mismo orden en catálogo y en distribución 🎉")
 
-        differences_summary.extend(differences)
-
-    return differences_summary

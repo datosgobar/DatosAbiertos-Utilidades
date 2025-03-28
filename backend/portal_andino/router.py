@@ -1,6 +1,7 @@
 import tempfile
 from enum import Enum
 from typing import Union, List
+from backend.csv_app.tools import catalog_from_url
 import os
 
 from fastapi import APIRouter, Query, UploadFile, File
@@ -226,35 +227,36 @@ async def package_delete(
     description="Analiza la validez de la estructura de una o varias series de tiempo"
 )
 async def validate_series(
-        url: Union[str, None] = Query(
-            default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/catalog.xlsx"
-        ),
-        catalog: Union[UploadFile, None] = File(description="El catálogo con las series a validar.", default=None),
-        catalog_format: CatalogFormat = Query(
-            description="Formato en que se suministrará el catálogo"
-        ),
-        distribution_ids: Union[List[str], None] = Query(
-            description="El o los id's de las distribuciones a validar. Si no se especifica alguna se validarán todas "
-                        "las del catálogo.",
-            default=None
-        ),
+    url: Union[str, None] = Query(
+        default=None, description="La URL del catálogo a validar. Ej.: https://datos.gob.ar/catalog.xlsx"
+    ),
+    catalog: Union[UploadFile, None] = File(default=None, description="El catálogo con las series a validar."),
+    catalog_format: CatalogFormat = Query(
+        description="Formato en que se suministrará el catálogo"
+    ),
+    distribution_ids: Union[List[str], None] = Query(
+        description="El o los id's de las distribuciones a validar. Si no se especifica alguna se validarán todas "
+                    "las del catálogo.",
+        default=None
+    ),
 ):
-    content_catalog = None
 
     if not url and not catalog:
-        return {'error': 'debe especificar una url o subir un catalogo'}
-    if not url:
-        content_catalog = await catalog.read()
+        return "Error: se necesita algún catálogo"
+    if url and catalog:
+        return "Error: Sólo se puede especificar una URL o subir un catálogo, no ambos"
 
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
-        if not url:
+    if url:
+        catalog_name = catalog_from_url(url)
+    else:
+        content_catalog = await catalog.read()
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file_catalog:
             tmp_file_catalog.write(content_catalog)
             tmp_file_catalog.flush()
             tmp_file_catalog.seek(0)
             catalog_name = tmp_file_catalog.name
-        else:
-            catalog_name = url
 
-        response = info.validate_series(catalog_name, catalog_format.name, distribution_ids)
+
+    response = await info.validate_series(catalog_name, catalog_format.name, distribution_ids)
 
     return response
